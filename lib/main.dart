@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (ctx) => const HomepageScreen(),
         SettingsScreen.routeName: (ctx) => const SettingsScreen(),
-        ChooseUnitScreen.routeName: (ctx) => const ChooseUnitScreen(),
+        ChooseUnitScreen.routeName: (ctx) => ChooseUnitScreen(),
       },
     );
   }
