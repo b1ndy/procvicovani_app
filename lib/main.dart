@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:procvicovani_app/screens/choose_practice_type.dart';
 
 import './screens/homepage_screen.dart';
 import './screens/choose_unit_screen.dart';
@@ -38,7 +39,8 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (ctx) => const HomepageScreen(),
         SettingsScreen.routeName: (ctx) => const SettingsScreen(),
-        ChooseUnitScreen.routeName: (ctx) => ChooseUnitScreen(),
+        ChooseUnitScreen.routeName: (ctx) => const ChooseUnitScreen(),
+        ChoosePracticeType.routeName: (ctx) => const ChoosePracticeType(),
       },
     );
   }
