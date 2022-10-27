@@ -7,8 +7,10 @@ class ChoosePracticeType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       appBar: MyAppBar("xxx"),
+      body: Text(_practiceVocab[0][0]),
     );
   }
 }
