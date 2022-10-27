@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:procvicovani_app/screens/choose_practice_type.dart';
 
+import './screens/choose_practice_type.dart';
 import './screens/homepage_screen.dart';
 import './screens/choose_unit_screen.dart';
 import './screens/settings_screen.dart';
@@ -28,6 +28,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSwatch(
           brightness: Brightness.dark,
           primarySwatch: Colors.blue,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.blue,
+          hoverColor: Colors.lightBlue,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
