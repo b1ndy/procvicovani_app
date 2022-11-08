@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
             primary: Colors.grey.shade700,
           ),
         ),
+        toggleableActiveColor: Colors.blue,
       ),
       initialRoute: "/",
       routes: {

@@ -61,6 +61,21 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
         ChoosePracticeType.routeName,
         arguments: _practiceVocab,
       );
+    } else {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Vyber Lekci!'),
+          content: const Text(
+              'Nemáš vybranou žádnou lekci. Vyber jednu nebo více lekcí, které chceš procvičovat, a zkus to znovu.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

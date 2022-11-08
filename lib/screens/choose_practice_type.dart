@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:procvicovani_app/widgets/button_with_icon.dart';
 
 import '../widgets/my_app_bar.dart';
 
@@ -10,8 +11,12 @@ class ChoosePracticeType extends StatelessWidget {
   Widget build(BuildContext context) {
     final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
-      appBar: MyAppBar("xxx"),
-      body: Text(_practiceVocab[0][0]),
+      appBar: MyAppBar("Vyber Procvičování"),
+      body: const ButtonWithIcon(
+        "Test",
+        "/",
+        "V Testu bla bla...",
+      ),
     );
   }
 }
