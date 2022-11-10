@@ -65,7 +65,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
       showDialog<String>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
-          title: const Text('Vyber Lekci!'),
+          title: const Text('Vyber lekci!'),
           content: const Text(
               'Nemáš vybranou žádnou lekci. Vyber jednu nebo více lekcí, které chceš procvičovat, a zkus to znovu.'),
           actions: <Widget>[
@@ -83,7 +83,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
   Widget build(BuildContext context) {
     final _unitList = _lectureList.keys.toList();
     return Scaffold(
-      appBar: MyAppBar("Vyber Lekce"),
+      appBar: MyAppBar("Vyber lekci"),
       body: ListView.builder(
         itemBuilder: (ctx, index) {
           return Column(

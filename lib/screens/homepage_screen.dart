@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../screens/choose_unit_screen.dart';
-import '../screens/settings_screen.dart';
+import './choose_class_screen.dart';
+import './settings_screen.dart';
+
 import '../widgets/default_button.dart';
 import '../widgets/my_app_bar.dart';
 import "../widgets/inf_button.dart";
@@ -51,8 +52,13 @@ class HomepageScreen extends StatelessWidget {
               height: 60,
             ),
             const DefaultButton(
-                "Začít Procvičovat", ChooseUnitScreen.routeName),
-            const DefaultButton("Nastavení", SettingsScreen.routeName),
+              "Začít procvičovat",
+              ChooseClassScreen.routeName,
+            ),
+            const DefaultButton(
+              "Nastavení",
+              SettingsScreen.routeName,
+            ),
             const InfButton("O Aplikaci"),
           ],
         ),

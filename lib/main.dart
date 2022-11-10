@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'screens/choose_class_screen.dart';
+import './screens/flash_cards_screen.dart';
 import './screens/choose_practice_type.dart';
 import './screens/homepage_screen.dart';
 import './screens/choose_unit_screen.dart';
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
         SettingsScreen.routeName: (ctx) => const SettingsScreen(),
         ChooseUnitScreen.routeName: (ctx) => const ChooseUnitScreen(),
         ChoosePracticeType.routeName: (ctx) => const ChoosePracticeType(),
+        FlashCardsScreen.routeName: (ctx) => const FlashCardsScreen(),
+        ChooseClassScreen.routeName: (ctx) => const ChooseClassScreen(),
       },
     );
   }

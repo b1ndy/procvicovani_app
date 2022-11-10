@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:procvicovani_app/widgets/button_with_icon.dart';
 
+import '../widgets/button_with_icon.dart';
 import '../widgets/my_app_bar.dart';
 
 class ChoosePracticeType extends StatelessWidget {
@@ -11,11 +11,18 @@ class ChoosePracticeType extends StatelessWidget {
   Widget build(BuildContext context) {
     final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
-      appBar: MyAppBar("Vyber Procvičování"),
-      body: const ButtonWithIcon(
-        "Test",
-        "/",
-        "V Testu bla bla...",
+      extendBodyBehindAppBar: true,
+      appBar: MyAppBar("Vyber procvičování"),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ButtonWithIcon(
+            "Flash cards",
+            "/flash-cards",
+            "Ve Flash cards... bla bla...",
+            _practiceVocab,
+          ),
+        ],
       ),
     );
   }

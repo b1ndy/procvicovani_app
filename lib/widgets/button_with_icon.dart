@@ -4,9 +4,10 @@ class ButtonWithIcon extends StatelessWidget {
   final String text;
   final String routeName;
   final String infoText;
+  final List arg;
 
   // ignore: use_key_in_widget_constructors
-  const ButtonWithIcon(this.text, this.routeName, this.infoText);
+  const ButtonWithIcon(this.text, this.routeName, this.infoText, this.arg);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,8 @@ class ButtonWithIcon extends StatelessWidget {
             ),
           ],
         ),
-        onPressed: () => Navigator.pushNamed(context, routeName),
+        onPressed: () =>
+            Navigator.pushNamed(context, routeName, arguments: arg),
       ),
     );
   }
