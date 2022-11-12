@@ -19,34 +19,35 @@ class ButtonWithIcon extends StatelessWidget {
         horizontal: 20,
       ),
       child: ElevatedButton(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              text,
-              style: const TextStyle(fontSize: 18),
-            ),
-            IconButton(
-              icon: const Icon(Icons.info_outline_rounded),
-              onPressed: () => showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: Text(text),
-                  content: Text(infoText),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, 'OK'),
-                      child: const Text('OK'),
-                    ),
-                  ],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                text,
+                style: const TextStyle(fontSize: 18),
+              ),
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: () => showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: Text(text),
+                    content: Text(infoText),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-        onPressed: () =>
-            Navigator.pushNamed(context, routeName, arguments: arg),
-      ),
+            ],
+          ),
+          onPressed: () {
+            arg[1][2] = "learned";
+            Navigator.pushNamed(context, routeName, arguments: arg);
+          }),
     );
   }
 }

@@ -11,7 +11,7 @@ class ChooseClassScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: MyAppBar("Vyber procvičování"),
+      appBar: MyAppBar("Vyber třídu"),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [

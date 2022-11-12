@@ -16,6 +16,13 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
   final Map<String, List<List>> _lectureList = vocabulary.map((key, value) =>
       MapEntry(key, value.keys.map((e) => [e, false]).toList()));
 
+  //every lexis has switch unknown/learning/learned
+  final Map<String, Map<String, List<List<Object>>>> _vocabList =
+      vocabulary.map((key, value) => MapEntry(
+          key,
+          value.map((key, value) => MapEntry(
+              key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
+
   Widget _buildUnitName(String text) {
     return Container(
       width: double.infinity,
@@ -51,11 +58,13 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     _lectureList.forEach((key, value) {
       for (var element in value) {
         if (element[1] == true) {
-          _practiceVocab.addAll(vocabulary[key]![element[0]]!);
+          _practiceVocab.addAll(_vocabList[key]![element[
+              0]]!); //_practiceVocab.addAll(_vocabList[key]![element[0]]!.map((e) => e.toList()));
         }
       }
     });
     if (_practiceVocab.isNotEmpty) {
+      _practiceVocab[2][2] = "learned";
       Navigator.pushNamed(
         context,
         ChoosePracticeType.routeName,
@@ -109,7 +118,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
             ],
           );
         },
-        itemCount: vocabulary.length,
+        itemCount: _vocabList.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: confirmChoice,

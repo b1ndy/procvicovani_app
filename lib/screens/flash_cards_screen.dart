@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/my_app_bar.dart';
+import "../widgets/my_app_bar.dart";
 
 class FlashCardsScreen extends StatefulWidget {
   const FlashCardsScreen({Key? key}) : super(key: key);
@@ -11,9 +11,9 @@ class FlashCardsScreen extends StatefulWidget {
 }
 
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
-  final _unknown = 0;
-  final _learning = 0;
-  final _learned = 0;
+  var _unknown = 0;
+  var _learning = 0;
+  var _learned = 0;
 
   Widget _buildCounter(text, counter) {
     return Column(
@@ -33,7 +33,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
-  Widget _buildVDivider() {
+  Widget _buildDivider() {
     return SizedBox(
       height: 35,
       child: VerticalDivider(
@@ -44,10 +44,30 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
+  void _refreshCounters(practiceVocab) {
+    _unknown = 0;
+    _learning = 0;
+    _learned = 0;
+    for (var e in practiceVocab) {
+      if (e[2] == "learned") {
+        setState(() {
+          _learned++;
+        });
+      } else if (e[2] == "learning") {
+        setState(() {
+          _learning++;
+        });
+      } else if (e[2] == "unknown") {
+        setState(() {
+          _unknown++;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
-    print(_practiceVocab);
     return Scaffold(
       appBar: MyAppBar(""),
       body: Column(
@@ -56,12 +76,24 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildCounter("Umím", _learned),
-              _buildVDivider(),
+              _buildDivider(),
               _buildCounter("Znám", _learning),
-              _buildVDivider(),
+              _buildDivider(),
               _buildCounter("Neumím", _unknown),
             ],
           ),
+          ElevatedButton(
+            onPressed: () {
+              _refreshCounters(_practiceVocab);
+            },
+            child: const Text("PRESS ME PLS"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              _practiceVocab[0][2] = "learned";
+            },
+            child: const Text("CHANGE ONE LEXIS"),
+          )
         ],
       ),
     );
