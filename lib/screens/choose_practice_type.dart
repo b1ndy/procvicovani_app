@@ -9,18 +9,16 @@ class ChoosePracticeType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: MyAppBar("Vyber procvičování"),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: const [
           ButtonWithIcon(
             "Flash cards",
             "/flash-cards",
             "Ve Flash cards... bla bla...",
-            _practiceVocab,
           ),
         ],
       ),

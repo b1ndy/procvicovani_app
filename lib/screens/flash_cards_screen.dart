@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import "../widgets/my_app_bar.dart";
+import '../data/class_service.dart' as cs;
 
 class FlashCardsScreen extends StatefulWidget {
   const FlashCardsScreen({Key? key}) : super(key: key);
@@ -67,7 +68,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _practiceVocab = ModalRoute.of(context)!.settings.arguments as List;
+    List _practiceVocab = cs.classService.getPracticeVocab();
     return Scaffold(
       appBar: MyAppBar(""),
       body: Column(
@@ -84,16 +85,12 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
+              print(cs.classService.getPracticeVocab());
+              print(cs.classService.getPracticeVocab().length);
               _refreshCounters(_practiceVocab);
             },
             child: const Text("PRESS ME PLS"),
           ),
-          ElevatedButton(
-            onPressed: () {
-              _practiceVocab[0][2] = "learned";
-            },
-            child: const Text("CHANGE ONE LEXIS"),
-          )
         ],
       ),
     );

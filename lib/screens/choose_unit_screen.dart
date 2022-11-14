@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import './choose_practice_type.dart';
 import '../widgets/my_app_bar.dart';
-import '../data/vocabulary.dart';
+import '../data/six_class_vocab.dart';
+import '../data/class_service.dart' as cs;
 
 class ChooseUnitScreen extends StatefulWidget {
   const ChooseUnitScreen({Key? key}) : super(key: key);
@@ -13,12 +14,12 @@ class ChooseUnitScreen extends StatefulWidget {
 }
 
 class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
-  final Map<String, List<List>> _lectureList = vocabulary.map((key, value) =>
+  final Map<String, List<List>> _lectureList = sixClassVocab.map((key, value) =>
       MapEntry(key, value.keys.map((e) => [e, false]).toList()));
 
   //every lexis has switch unknown/learning/learned
   final Map<String, Map<String, List<List<Object>>>> _vocabList =
-      vocabulary.map((key, value) => MapEntry(
+      sixClassVocab.map((key, value) => MapEntry(
           key,
           value.map((key, value) => MapEntry(
               key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
@@ -54,21 +55,11 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
   }
 
   void confirmChoice() {
-    final _practiceVocab = [];
-    _lectureList.forEach((key, value) {
-      for (var element in value) {
-        if (element[1] == true) {
-          _practiceVocab.addAll(_vocabList[key]![element[
-              0]]!); //_practiceVocab.addAll(_vocabList[key]![element[0]]!.map((e) => e.toList()));
-        }
-      }
-    });
+    final _practiceVocab = cs.classService.fillPracticeVocab(_lectureList);
     if (_practiceVocab.isNotEmpty) {
-      _practiceVocab[2][2] = "learned";
       Navigator.pushNamed(
         context,
         ChoosePracticeType.routeName,
-        arguments: _practiceVocab,
       );
     } else {
       showDialog<String>(

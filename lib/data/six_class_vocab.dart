@@ -1,4 +1,4 @@
-final vocabulary = {
+final sixClassVocab = {
   "Introduction": {
     "A New friends": [
       ["British", "britský"],

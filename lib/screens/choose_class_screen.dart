@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/default_button.dart';
+import '../data/six_class_vocab.dart';
+import '../widgets/class_button.dart';
 import '../widgets/my_app_bar.dart';
 
 class ChooseClassScreen extends StatelessWidget {
@@ -14,10 +15,11 @@ class ChooseClassScreen extends StatelessWidget {
       appBar: MyAppBar("Vyber třídu"),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          DefaultButton(
+        children: [
+          ClassButton(
             "6. třída",
             "/choose-unit",
+            sixClassVocab,
           ),
         ],
       ),
