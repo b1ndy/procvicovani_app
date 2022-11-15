@@ -2,9 +2,9 @@
 //měnit practice list pomocí funkce - bezpečnější
 class ClassService {
   Map _vocabList = {};
-  List _practiceVocab = [];
+  Map _practiceVocab = {};
 
-  void fillVocabList(chosenClass) {
+  void fillVocabList(Map chosenClass) {
     //pokud chci změnit třídu, tak se vocablist musí uložit do souboru, aby se tu nesmazal
     _vocabList = {};
     _vocabList = chosenClass.map((key, value) => MapEntry(
@@ -13,23 +13,45 @@ class ClassService {
             key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
   }
 
-  List fillPracticeVocab(lectureList) {
+  List fillPracticeVocab(Map lectureList) {
     //pokud chci změnit lekci, tak se practicevocab musí uložit do vocablistu, aby se tu nesmazal
-    _practiceVocab = [];
+    _practiceVocab = {};
     lectureList.forEach((key, value) {
       for (var element in value) {
         if (element[1] == true) {
           //_practiceVocab.addAll(_vocabList[key]![element[0]]!.map((e) => e.toList()));
-          _practiceVocab.addAll(_vocabList[key]![element[0]]!);
+          _practiceVocab[[key, element[0]]] = _vocabList[key]![element[0]]!;
         }
       }
     });
-    return _practiceVocab;
+    return getPracticeVocab();
+  }
+
+  void setPracticeVocab(String lexis, String status) {
+    _practiceVocab.forEach((key, value) {
+      for (var element in value) {
+        if (element[0] == lexis) {
+          element[2] = status;
+        }
+      }
+    });
   }
 
   List getPracticeVocab() {
-    return _practiceVocab;
+    List _practiceVocabList = [];
+    _practiceVocab.forEach((key, value) {
+      _practiceVocabList.addAll(value);
+    });
+    return _practiceVocabList;
   }
+
+  // void savePracticeVocab() {
+  //   //nulovat _practice vocab?
+  //   _practiceVocab.forEach((key, value) {
+  //     _vocabList[key] = value;
+  //   });
+  //   print(_vocabList);
+  // }
 }
 
 ClassService classService = ClassService();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "dart:math";
 
 import "../widgets/my_app_bar.dart";
 import '../data/class_service.dart' as cs;
@@ -68,7 +69,9 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //set -> cs.classService, read -> _practiceVocab
     List _practiceVocab = cs.classService.getPracticeVocab();
+    _refreshCounters(_practiceVocab);
     return Scaffold(
       appBar: MyAppBar(""),
       body: Column(
@@ -85,9 +88,11 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              print(cs.classService.getPracticeVocab());
-              print(cs.classService.getPracticeVocab().length);
+              Random random = Random();
+              cs.classService.setPracticeVocab(
+                  _practiceVocab[random.nextInt(30)][0], "learned");
               _refreshCounters(_practiceVocab);
+              print(_practiceVocab);
             },
             child: const Text("PRESS ME PLS"),
           ),
