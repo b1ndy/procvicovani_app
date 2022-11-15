@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import "dart:math";
 
 import "../widgets/my_app_bar.dart";
-import '../data/class_service.dart' as cs;
+import '../data/data_service_class.dart' as cs;
 
 class FlashCardsScreen extends StatefulWidget {
   const FlashCardsScreen({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../data/class_service.dart' as cs;
+import '../data/data_service_class.dart' as cs;
 
 class ClassButton extends StatelessWidget {
   final String text;

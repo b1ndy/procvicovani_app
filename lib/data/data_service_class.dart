@@ -1,5 +1,9 @@
 //při vypnutí appky se musí uložit practice vocab do vocablistu a ten následně do souboru . json
 //měnit practice list pomocí funkce - bezpečnější
+
+//_vocabList - všechna slovíčka i se statusem
+//_practiceVocab - vybrané lekce mapa [unit, lekce] : [slovíčka]
+//_practiceVocabList - [slovíčka]
 class ClassService {
   Map _vocabList = {};
   Map _practiceVocab = {};

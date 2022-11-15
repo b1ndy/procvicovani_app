@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import './choose_practice_type.dart';
 import '../widgets/my_app_bar.dart';
 import '../data/six_class_vocab.dart';
-import '../data/class_service.dart' as cs;
+import '../data/data_service_class.dart' as cs;
 
 class ChooseUnitScreen extends StatefulWidget {
   const ChooseUnitScreen({Key? key}) : super(key: key);
