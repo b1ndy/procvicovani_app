@@ -1,5 +1,4 @@
 //při vypnutí appky se musí uložit practice vocab do vocablistu a ten následně do souboru . json
-//měnit practice list pomocí funkce - bezpečnější
 
 //_vocabList - všechna slovíčka i se statusem
 //_practiceVocab - vybrané lekce mapa [unit, lekce] : [slovíčka]
@@ -18,12 +17,10 @@ class ClassService {
   }
 
   List fillPracticeVocab(Map lectureList) {
-    //pokud chci změnit lekci, tak se practicevocab musí uložit do vocablistu, aby se tu nesmazal
     _practiceVocab = {};
     lectureList.forEach((key, value) {
       for (var element in value) {
         if (element[1] == true) {
-          //_practiceVocab.addAll(_vocabList[key]![element[0]]!.map((e) => e.toList()));
           _practiceVocab[[key, element[0]]] = _vocabList[key]![element[0]]!;
         }
       }
@@ -31,6 +28,7 @@ class ClassService {
     return getPracticeVocab();
   }
 
+  //sets status (learned, learning..) for certain lexis in _practiceVocab
   void setPracticeVocab(String lexis, String status) {
     _practiceVocab.forEach((key, value) {
       for (var element in value) {
@@ -41,21 +39,49 @@ class ClassService {
     });
   }
 
+  int _getLearnedCount() {
+    int _learned = 0;
+    _practiceVocab.forEach((key, value) {
+      for (var e in value) {
+        if (e[2] == "learned") {
+          _learned++;
+        }
+      }
+    });
+    return _learned;
+  }
+
+  //returns counters for practiceVocab including learned
+  List<int> getCounters() {
+    int _unknown = 0;
+    int _learning = 0;
+    int _learned = _getLearnedCount();
+    getPracticeVocab().forEach((element) {
+      switch (element[2]) {
+        case "unknown":
+          _unknown++;
+          break;
+        case "learning":
+          _learning++;
+          break;
+        default:
+      }
+    });
+    return [_unknown, _learning, _learned];
+  }
+
+  //returns practiceVocabList
   List getPracticeVocab() {
     List _practiceVocabList = [];
     _practiceVocab.forEach((key, value) {
-      _practiceVocabList.addAll(value);
+      for (var e in value) {
+        if (e[2] != "learned") {
+          _practiceVocabList.add(e);
+        }
+      }
     });
     return _practiceVocabList;
   }
-
-  // void savePracticeVocab() {
-  //   //nulovat _practice vocab?
-  //   _practiceVocab.forEach((key, value) {
-  //     _vocabList[key] = value;
-  //   });
-  //   print(_vocabList);
-  // }
 }
 
 ClassService classService = ClassService();

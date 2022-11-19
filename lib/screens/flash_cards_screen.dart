@@ -16,7 +16,9 @@ class FlashCardsScreen extends StatefulWidget {
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
   List _practiceVocab = cs.classService.getPracticeVocab();
   final controller = SwipableStackController();
-  final ValueNotifier<List<int>> _counterNotifier = ValueNotifier([0, 0, 0]);
+  //ValueNotifier if changed ValueListenableBuilder will refresh
+  final ValueNotifier<List<int>> _counterNotifier =
+      ValueNotifier(cs.classService.getCounters());
 
   Widget _buildCounter(text, counter) {
     return Column(
@@ -67,20 +69,72 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
-  List<int> _refreshCounters(practiceVocab) {
-    int _unknown = 0;
-    int _learning = 0;
-    int _learned = 0;
-    for (var e in practiceVocab) {
-      if (e[2] == "learned") {
-        _learned++;
-      } else if (e[2] == "learning") {
-        _learning++;
-      } else if (e[2] == "unknown") {
-        _unknown++;
+  //dec/inc _counterNotifier
+  void _setCounter(dec, inc) {
+    List<int> _counter = [
+      _counterNotifier.value[0],
+      _counterNotifier.value[1],
+      _counterNotifier.value[2],
+    ];
+
+    switch (dec) {
+      case "unknown":
+        _counter[0]--;
+        break;
+      case "learning":
+        _counter[1]--;
+        break;
+      case "learned":
+        _counter[2]--;
+        break;
+      default:
+    }
+    switch (inc) {
+      case "unknown":
+        _counter[0]++;
+        break;
+      case "learning":
+        _counter[1]++;
+        break;
+      case "learned":
+        _counter[2]++;
+        break;
+      default:
+    }
+
+    _counterNotifier.value = [
+      _counter[0],
+      _counter[1],
+      _counter[2],
+    ].toList();
+  }
+
+  //on Swipe sets status of current lexis and refreshes counters
+  void _handleSwipeDirection(direction, index) {
+    if (direction == SwipeDirection.right) {
+      if (_practiceVocab[index][2] == "unknown") {
+        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
+        _setCounter("unknown", "learning");
+      } else if (_practiceVocab[index][2] == "learning") {
+        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learned");
+        _setCounter("learning", "learned");
       }
     }
-    return [_unknown, _learning, _learned];
+    if (direction == SwipeDirection.left) {
+      if (_practiceVocab[index][2] == "learned") {
+        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
+        _setCounter("learned", "learning");
+      } else if (_practiceVocab[index][2] == "learning") {
+        cs.classService.setPracticeVocab(_practiceVocab[index][0], "unknown");
+        _setCounter("learning", "unknown");
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -92,7 +146,6 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ValueListenableBuilder(
             valueListenable: _counterNotifier,
             builder: (context, List value, _) {
-              value = _refreshCounters(_practiceVocab);
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -126,28 +179,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                   },
                   onSwipeCompleted: (index, direction) {
                     print('$index, $direction');
-                    if (direction == SwipeDirection.right) {
-                      if (_practiceVocab[index][2] == "unknown") {
-                        cs.classService.setPracticeVocab(
-                            _practiceVocab[index][0], "learning");
-                      } else {
-                        cs.classService.setPracticeVocab(
-                            _practiceVocab[index][0], "learned");
-                      }
-                    }
-                    if (direction == SwipeDirection.left) {
-                      if (_practiceVocab[index][2] == "learned") {
-                        cs.classService.setPracticeVocab(
-                            _practiceVocab[index][0], "learning");
-                      } else {
-                        cs.classService.setPracticeVocab(
-                            _practiceVocab[index][0], "unknown");
-                      }
-                    }
-
-                    //nezařazovat ty co jsou LEARNED
-                    print(_practiceVocab.length);
-                    _counterNotifier.value = _refreshCounters(_practiceVocab);
+                    _handleSwipeDirection(direction, index);
                   },
                   allowVerticalSwipe: false,
                   stackClipBehaviour: Clip.none,
@@ -158,8 +190,11 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ElevatedButton(
             onPressed: () {
               controller.currentIndex = 0;
+              setState(() {
+                _practiceVocab = cs.classService.getPracticeVocab();
+              });
             },
-            child: Text("Restart"),
+            child: const Text("Restart"),
           )
         ],
       ),
