@@ -14,10 +14,9 @@ class FlashCardsScreen extends StatefulWidget {
 }
 
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
-  var _unknown = 0;
-  var _learning = 0;
-  var _learned = 0;
-  final List _practiceVocab = cs.classService.getPracticeVocab();
+  List _practiceVocab = cs.classService.getPracticeVocab();
+  final controller = SwipableStackController();
+  final ValueNotifier<List<int>> _counterNotifier = ValueNotifier([0, 0, 0]);
 
   Widget _buildCounter(text, counter) {
     return Column(
@@ -48,96 +47,107 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
-  void _refreshCounters(practiceVocab) {
-    _unknown = 0;
-    _learning = 0;
-    _learned = 0;
+  Widget _buildFlipContainer(text) {
+    return Container(
+      alignment: Alignment.center,
+      width: 300,
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.grey.shade800,
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade900,
+            blurRadius: 4,
+            offset: const Offset(3, 6), // Shadow position
+          ),
+        ],
+      ),
+      child: Text(text),
+    );
+  }
+
+  List<int> _refreshCounters(practiceVocab) {
+    int _unknown = 0;
+    int _learning = 0;
+    int _learned = 0;
     for (var e in practiceVocab) {
       if (e[2] == "learned") {
-        setState(() {
-          _learned++;
-        });
+        _learned++;
       } else if (e[2] == "learning") {
-        setState(() {
-          _learning++;
-        });
+        _learning++;
       } else if (e[2] == "unknown") {
-        setState(() {
-          _unknown++;
-        });
+        _unknown++;
       }
     }
+    return [_unknown, _learning, _learned];
   }
 
   @override
   Widget build(BuildContext context) {
-    _refreshCounters(
-        _practiceVocab); // možná se refreshuje náhodně - zkusit init state
-    List currentLexis = [_practiceVocab[0][0], _practiceVocab[0][1]];
     return Scaffold(
       appBar: MyAppBar(""),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              _buildCounter("Umím", _learned),
-              _buildDivider(),
-              _buildCounter("Znám", _learning),
-              _buildDivider(),
-              _buildCounter("Neumím", _unknown),
-            ],
+          ValueListenableBuilder(
+            valueListenable: _counterNotifier,
+            builder: (context, List value, _) {
+              value = _refreshCounters(_practiceVocab);
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _buildCounter("Neumím", value[0]),
+                  _buildDivider(),
+                  _buildCounter("Znám", value[1]),
+                  _buildDivider(),
+                  _buildCounter("Umím", value[2]),
+                ],
+              );
+            },
           ),
-          Container(
+          SizedBox(
             height: 300,
             width: 300,
             child: Stack(
               children: [
                 SwipableStack(
-                  itemCount: 30,
+                  controller: controller,
+                  itemCount: _practiceVocab.length,
                   builder: (context, properties) {
                     return FlipCard(
                       direction: FlipDirection.VERTICAL,
                       // front of the card
-                      front: Container(
-                        alignment: Alignment.center,
-                        width: 300,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade800,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade900,
-                              blurRadius: 4,
-                              offset: const Offset(3, 6), // Shadow position
-                            ),
-                          ],
-                        ),
-                        child: Text(_practiceVocab[properties.index][0]),
-                      ),
+                      front: _buildFlipContainer(
+                          _practiceVocab[properties.index][0]),
                       // back of the card
-                      back: Container(
-                        alignment: Alignment.center,
-                        width: 300,
-                        height: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade800,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade900,
-                              blurRadius: 4,
-                              offset: const Offset(3, 6), // Shadow position
-                            ),
-                          ],
-                        ),
-                        child: Text(_practiceVocab[properties.index][1]),
-                      ),
+                      back: _buildFlipContainer(
+                          _practiceVocab[properties.index][1]),
                     );
                   },
                   onSwipeCompleted: (index, direction) {
                     print('$index, $direction');
+                    if (direction == SwipeDirection.right) {
+                      if (_practiceVocab[index][2] == "unknown") {
+                        cs.classService.setPracticeVocab(
+                            _practiceVocab[index][0], "learning");
+                      } else {
+                        cs.classService.setPracticeVocab(
+                            _practiceVocab[index][0], "learned");
+                      }
+                    }
+                    if (direction == SwipeDirection.left) {
+                      if (_practiceVocab[index][2] == "learned") {
+                        cs.classService.setPracticeVocab(
+                            _practiceVocab[index][0], "learning");
+                      } else {
+                        cs.classService.setPracticeVocab(
+                            _practiceVocab[index][0], "unknown");
+                      }
+                    }
+
+                    //nezařazovat ty co jsou LEARNED
+                    print(_practiceVocab.length);
+                    _counterNotifier.value = _refreshCounters(_practiceVocab);
                   },
                   allowVerticalSwipe: false,
                   stackClipBehaviour: Clip.none,
@@ -145,6 +155,12 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
               ],
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              controller.currentIndex = 0;
+            },
+            child: Text("Restart"),
+          )
         ],
       ),
     );
