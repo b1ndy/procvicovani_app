@@ -16,7 +16,7 @@ class ClassService {
             key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
   }
 
-  List fillPracticeVocab(Map lectureList) {
+  bool fillPracticeVocab(Map lectureList) {
     _practiceVocab = {};
     lectureList.forEach((key, value) {
       for (var element in value) {
@@ -25,7 +25,7 @@ class ClassService {
         }
       }
     });
-    return getPracticeVocab();
+    return (_practiceVocab.isNotEmpty) ? true : false;
   }
 
   //sets status (learned, learning..) for certain lexis in _practiceVocab

@@ -14,16 +14,11 @@ class ChooseUnitScreen extends StatefulWidget {
 }
 
 class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
+  //list of unit and lectures
   final Map<String, List<List>> _lectureList = sixClassVocab.map((key, value) =>
       MapEntry(key, value.keys.map((e) => [e, false]).toList()));
 
-  //every lexis has switch unknown/learning/learned
-  final Map<String, Map<String, List<List<Object>>>> _vocabList =
-      sixClassVocab.map((key, value) => MapEntry(
-          key,
-          value.map((key, value) => MapEntry(
-              key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
-
+  //builds UnitName with bottom border
   Widget _buildUnitName(String text) {
     return Container(
       width: double.infinity,
@@ -54,9 +49,10 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     );
   }
 
+  //fills PracticeVocab in DataServiceClass and if ist not empty then navigates to next page
   void confirmChoice() {
     final _practiceVocab = cs.classService.fillPracticeVocab(_lectureList);
-    if (_practiceVocab.isNotEmpty) {
+    if (_practiceVocab == true) {
       Navigator.pushNamed(
         context,
         ChoosePracticeType.routeName,
@@ -109,7 +105,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
             ],
           );
         },
-        itemCount: _vocabList.length,
+        itemCount: _lectureList.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: confirmChoice,

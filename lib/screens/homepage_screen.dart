@@ -15,8 +15,7 @@ class HomepageScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: MyAppBar(""),
-      // ignore: sized_box_for_whitespace
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

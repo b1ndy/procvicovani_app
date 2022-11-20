@@ -1,3 +1,8 @@
+//comment other files if necesary
+//random generated cards (unknown mají 2x větší šanci, že se vygenerujou než learning)
+//button to refresh stack
+//button to revind last swipe
+
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
