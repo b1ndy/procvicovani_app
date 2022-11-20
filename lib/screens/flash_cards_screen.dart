@@ -1,5 +1,6 @@
-//button to revind last swipe
 //přepínač - procvičování čj-aj/aj-čj
+//upravit vzhled
+//poslat vedoucí na kontrolu
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -144,6 +145,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List _currentLexis = [];
     return Scaffold(
       appBar: MyAppBar(""),
       body: Column(
@@ -176,7 +178,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                       _practiceVocab = cs.classService.getPracticeVocab();
                     });
                   },
-                  child: const Text("Continue"),
+                  child: const Text("Pokračovat"),
                 ),
                 SwipableStack(
                   controller: controller,
@@ -194,6 +196,7 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                   },
                   onSwipeCompleted: (index, direction) {
                     print('$index, $direction');
+                    _currentLexis = _practiceVocab[index].toList();
                     _handleSwipeDirection(direction, index);
                   },
                   allowVerticalSwipe: false,
@@ -202,17 +205,34 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
               ],
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              controller.currentIndex = 0;
-              cs.classService.resetPracticeVocab();
-              _counterNotifier.value = cs.classService.getCounters();
-              setState(() {
-                _practiceVocab = cs.classService.getPracticeVocab();
-              });
-            },
-            child: const Text("Restart"),
-          )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  print(_currentLexis);
+                  if (_currentLexis.isNotEmpty) {
+                    cs.classService
+                        .setPracticeVocab(_currentLexis[0], _currentLexis[2]);
+                    controller.rewind();
+                    _counterNotifier.value = cs.classService.getCounters();
+                  }
+                },
+                child: const Text("Zpět"),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  controller.currentIndex = 0;
+                  cs.classService.resetPracticeVocab();
+                  _counterNotifier.value = cs.classService.getCounters();
+                  setState(() {
+                    _practiceVocab = cs.classService.getPracticeVocab();
+                  });
+                },
+                child: const Text("Restartovat"),
+              ),
+            ],
+          ),
         ],
       ),
     );
