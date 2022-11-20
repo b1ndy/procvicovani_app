@@ -1,7 +1,6 @@
-//comment other files if necesary
-//random generated cards (unknown mají 2x větší šanci, že se vygenerujou než learning)
-//button to refresh stack
 //button to revind last swipe
+//přepínač - procvičování čj-aj/aj-čj
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
@@ -19,6 +18,7 @@ class FlashCardsScreen extends StatefulWidget {
 }
 
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
+  Random randomGenerator = Random();
   List _practiceVocab = cs.classService.getPracticeVocab();
   final controller = SwipableStackController();
   //ValueNotifier if changed ValueListenableBuilder will refresh
@@ -167,7 +167,17 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
             height: 300,
             width: 300,
             child: Stack(
+              alignment: Alignment.center,
               children: [
+                ElevatedButton(
+                  onPressed: () {
+                    controller.currentIndex = 0;
+                    setState(() {
+                      _practiceVocab = cs.classService.getPracticeVocab();
+                    });
+                  },
+                  child: const Text("Continue"),
+                ),
                 SwipableStack(
                   controller: controller,
                   itemCount: _practiceVocab.length,
@@ -195,6 +205,8 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ElevatedButton(
             onPressed: () {
               controller.currentIndex = 0;
+              cs.classService.resetPracticeVocab();
+              _counterNotifier.value = cs.classService.getCounters();
               setState(() {
                 _practiceVocab = cs.classService.getPracticeVocab();
               });

@@ -70,7 +70,16 @@ class ClassService {
     return [_unknown, _learning, _learned];
   }
 
-  //returns practiceVocabList
+  //sets all PracticeVocab to unknown
+  void resetPracticeVocab() {
+    _practiceVocab.forEach((key, value) {
+      for (var element in value) {
+        element[2] = "unknown";
+      }
+    });
+  }
+
+  //returns shuffled practiceVocabList
   List getPracticeVocab() {
     List _practiceVocabList = [];
     _practiceVocab.forEach((key, value) {
@@ -80,8 +89,11 @@ class ClassService {
         }
       }
     });
+    _practiceVocabList.shuffle();
     return _practiceVocabList;
   }
 }
+
+//how to get mixed practiceVocab
 
 ClassService classService = ClassService();
