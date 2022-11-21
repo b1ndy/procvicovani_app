@@ -1,5 +1,5 @@
-//přepínač - procvičování čj-aj/aj-čj
 //upravit vzhled
+//napsat popis a návod flash cards
 //poslat vedoucí na kontrolu
 import 'dart:math';
 
@@ -20,6 +20,9 @@ class FlashCardsScreen extends StatefulWidget {
 
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
   Random randomGenerator = Random();
+  bool _isSwitched = false;
+  int _cardState1 = 0;
+  int _cardState2 = 1;
   List _practiceVocab = cs.classService.getPracticeVocab();
   final controller = SwipableStackController();
   //ValueNotifier if changed ValueListenableBuilder will refresh
@@ -188,10 +191,10 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                       direction: FlipDirection.VERTICAL,
                       // front of the card
                       front: _buildFlipContainer(
-                          _practiceVocab[properties.index][0]),
+                          _practiceVocab[properties.index][_cardState1]),
                       // back of the card
                       back: _buildFlipContainer(
-                          _practiceVocab[properties.index][1]),
+                          _practiceVocab[properties.index][_cardState2]),
                     );
                   },
                   onSwipeCompleted: (index, direction) {
@@ -230,6 +233,19 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                   });
                 },
                 child: const Text("Restartovat"),
+              ),
+              Switch(
+                activeColor: Colors.grey.shade400,
+                activeTrackColor: Colors.grey.shade600,
+                value: _isSwitched,
+                onChanged: (value) {
+                  setState(() {
+                    _isSwitched = value;
+                    int _state = _cardState1;
+                    _cardState1 = _cardState2;
+                    _cardState2 = _state;
+                  });
+                },
               ),
             ],
           ),
