@@ -1,4 +1,4 @@
-//upravit vzhled
+//Zkontrolovat responzivitu (velikost karty...) (výšku odečíst ze zařízení)
 //napsat popis a návod flash cards
 //poslat vedoucí na kontrolu
 import 'dart:math';
@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
-import "../widgets/my_app_bar.dart";
 import '../data/data_service_class.dart' as cs;
 
 class FlashCardsScreen extends StatefulWidget {
@@ -20,6 +19,7 @@ class FlashCardsScreen extends StatefulWidget {
 
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
   Random randomGenerator = Random();
+  String _language = "Angličtina";
   bool _isSwitched = false;
   int _cardState1 = 0;
   int _cardState2 = 1;
@@ -28,6 +28,85 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
   //ValueNotifier if changed ValueListenableBuilder will refresh
   final ValueNotifier<List<int>> _counterNotifier =
       ValueNotifier(cs.classService.getCounters());
+
+  Widget _buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          SizedBox(
+            height: 120,
+            child: DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.grey.shade800,
+              ),
+              child: const Text(
+                'Nastavení',
+                style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("Přední strana: $_language"),
+                Switch(
+                  activeColor: Colors.grey.shade400,
+                  activeTrackColor: Colors.grey.shade600,
+                  value: _isSwitched,
+                  onChanged: (value) {
+                    setState(() {
+                      _isSwitched = value;
+                      if (_language == "Angličtina") {
+                        _language = "Čeština";
+                      } else {
+                        _language = "Angličtina";
+                      }
+                      int _state = _cardState1;
+                      _cardState1 = _cardState2;
+                      _cardState2 = _state;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.settings_backup_restore,
+            ),
+            title: const Text("Restartovat"),
+            onTap: () {
+              controller.currentIndex = 0;
+              cs.classService.resetPracticeVocab();
+              _counterNotifier.value = cs.classService.getCounters();
+              setState(() {
+                _practiceVocab = cs.classService.getPracticeVocab();
+              });
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Potvrdit"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildCounter(text, counter) {
     return Column(
@@ -150,7 +229,21 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
   Widget build(BuildContext context) {
     List _currentLexis = [];
     return Scaffold(
-      appBar: MyAppBar(""),
+      appBar: AppBar(
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+            ),
+          ),
+        ],
+        leading: const BackButton(),
+        title: const Text(""),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
+      endDrawer: _buildDrawer(),
       body: Column(
         children: [
           ValueListenableBuilder(
@@ -208,49 +301,22 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  print(_currentLexis);
-                  if (_currentLexis.isNotEmpty) {
-                    cs.classService
-                        .setPracticeVocab(_currentLexis[0], _currentLexis[2]);
-                    controller.rewind();
-                    _counterNotifier.value = cs.classService.getCounters();
-                  }
-                },
-                child: const Text("Zpět"),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  controller.currentIndex = 0;
-                  cs.classService.resetPracticeVocab();
-                  _counterNotifier.value = cs.classService.getCounters();
-                  setState(() {
-                    _practiceVocab = cs.classService.getPracticeVocab();
-                  });
-                },
-                child: const Text("Restartovat"),
-              ),
-              Switch(
-                activeColor: Colors.grey.shade400,
-                activeTrackColor: Colors.grey.shade600,
-                value: _isSwitched,
-                onChanged: (value) {
-                  setState(() {
-                    _isSwitched = value;
-                    int _state = _cardState1;
-                    _cardState1 = _cardState2;
-                    _cardState2 = _state;
-                  });
-                },
-              ),
-            ],
-          ),
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+          label: const Text("Zpět"),
+          icon: const Icon(Icons.restart_alt),
+          elevation: 2,
+          backgroundColor: Colors.grey.shade700,
+          foregroundColor: Colors.grey.shade300,
+          onPressed: () {
+            if (_currentLexis.isNotEmpty) {
+              cs.classService
+                  .setPracticeVocab(_currentLexis[0], _currentLexis[2]);
+              controller.rewind();
+              _counterNotifier.value = cs.classService.getCounters();
+            }
+          }),
     );
   }
 }

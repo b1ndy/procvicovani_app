@@ -27,7 +27,10 @@ class ClassButton extends StatelessWidget {
         child: Text(text),
         onPressed: () {
           cs.classService.fillVocabList(chosenVocab);
-          Navigator.pushNamed(context, route);
+          Navigator.pushNamed(
+            context,
+            route,
+          );
         },
       ),
     );
