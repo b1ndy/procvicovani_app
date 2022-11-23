@@ -1,6 +1,4 @@
-//Zkontrolovat responzivitu (velikost karty...) (výšku odečíst ze zařízení)
 //napsat popis a návod flash cards
-//poslat vedoucí na kontrolu
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -137,11 +135,11 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
-  Widget _buildFlipContainer(text) {
+  Widget _buildFlipContainer(text, height, width) {
     return Container(
       alignment: Alignment.center,
-      width: 300,
-      height: 300,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         color: Colors.grey.shade800,
         borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -227,43 +225,55 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      actions: [
+        Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Scaffold.of(context).openEndDrawer(),
+          ),
+        ),
+      ],
+      leading: const BackButton(),
+      title: const Text(""),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+    );
+    final _availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top -
+        84;
+    final _availableWidth = MediaQuery.of(context).size.width;
     List _currentLexis = [];
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.settings_outlined),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-            ),
-          ),
-        ],
-        leading: const BackButton(),
-        title: const Text(""),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-      ),
+      appBar: appBar,
       endDrawer: _buildDrawer(),
       body: Column(
         children: [
           ValueListenableBuilder(
             valueListenable: _counterNotifier,
             builder: (context, List value, _) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildCounter("Neumím", value[0]),
-                  _buildDivider(),
-                  _buildCounter("Znám", value[1]),
-                  _buildDivider(),
-                  _buildCounter("Umím", value[2]),
-                ],
+              return SizedBox(
+                height: 44,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildCounter("Neumím", value[0]),
+                    _buildDivider(),
+                    _buildCounter("Znám", value[1]),
+                    _buildDivider(),
+                    _buildCounter("Umím", value[2]),
+                  ],
+                ),
               );
             },
           ),
+          const SizedBox(
+            height: 40,
+          ),
           SizedBox(
-            height: 300,
-            width: 300,
+            height: _availableHeight * 0.7,
+            width: _availableWidth * 0.85,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -284,10 +294,16 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                       direction: FlipDirection.VERTICAL,
                       // front of the card
                       front: _buildFlipContainer(
-                          _practiceVocab[properties.index][_cardState1]),
+                        _practiceVocab[properties.index][_cardState1],
+                        _availableHeight * 0.7,
+                        _availableWidth * 0.85,
+                      ),
                       // back of the card
                       back: _buildFlipContainer(
-                          _practiceVocab[properties.index][_cardState2]),
+                        _practiceVocab[properties.index][_cardState2],
+                        _availableHeight * 0.7,
+                        _availableWidth * 0.85,
+                      ),
                     );
                   },
                   onSwipeCompleted: (index, direction) {
