@@ -1,11 +1,11 @@
 //napsat popis a návod flash cards
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 import '../data/data_service_class.dart' as cs;
+import '../data/instructions.dart';
 
 class FlashCardsScreen extends StatefulWidget {
   const FlashCardsScreen({Key? key}) : super(key: key);
@@ -18,6 +18,7 @@ class FlashCardsScreen extends StatefulWidget {
 class _FlashCardsScreenState extends State<FlashCardsScreen> {
   Random randomGenerator = Random();
   String _language = "Angličtina";
+  bool _visibility = false;
   bool _isSwitched = false;
   int _cardState1 = 0;
   int _cardState2 = 1;
@@ -89,6 +90,28 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
             },
           ),
           ListTile(
+            leading: const Icon(
+              Icons.info_outline_rounded,
+            ),
+            title: const Text("Návod"),
+            onTap: () {
+              Navigator.pop(context);
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text("Návod"),
+                  content: const Text(flashCardsGuide),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          ListTile(
             title: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -155,8 +178,36 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     );
   }
 
+  void _showGGDialog() {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text("Výborně!"),
+        content: const Text(flashCardsCG),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              controller.currentIndex = 0;
+              cs.classService.resetPracticeVocab();
+              _counterNotifier.value = cs.classService.getCounters();
+              setState(() {
+                _practiceVocab = cs.classService.getPracticeVocab();
+              });
+              Navigator.pop(context);
+            },
+            child: const Text('Restartovat'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   //dec/inc _counterNotifier
-  void _setCounter(dec, inc) {
+  void _setCounter(dec, inc, index) {
     List<int> _counter = [
       _counterNotifier.value[0],
       _counterNotifier.value[1],
@@ -200,20 +251,26 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
     if (direction == SwipeDirection.right) {
       if (_practiceVocab[index][2] == "unknown") {
         cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
-        _setCounter("unknown", "learning");
+        _setCounter("unknown", "learning", index);
       } else if (_practiceVocab[index][2] == "learning") {
         cs.classService.setPracticeVocab(_practiceVocab[index][0], "learned");
-        _setCounter("learning", "learned");
+        _setCounter("learning", "learned", index);
       }
     }
     if (direction == SwipeDirection.left) {
       if (_practiceVocab[index][2] == "learned") {
         cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
-        _setCounter("learned", "learning");
+        _setCounter("learned", "learning", index);
       } else if (_practiceVocab[index][2] == "learning") {
         cs.classService.setPracticeVocab(_practiceVocab[index][0], "unknown");
-        _setCounter("learning", "unknown");
+        _setCounter("learning", "unknown", index);
       }
+    }
+    if ((index == (_practiceVocab.length - 1)) &&
+        (_counterNotifier.value[0] > 0 || _counterNotifier.value[1] > 0)) {
+      setState(() {
+        _visibility = true;
+      });
     }
   }
 
@@ -277,14 +334,18 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    controller.currentIndex = 0;
-                    setState(() {
-                      _practiceVocab = cs.classService.getPracticeVocab();
-                    });
-                  },
-                  child: const Text("Pokračovat"),
+                Visibility(
+                  visible: _visibility,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      controller.currentIndex = 0;
+                      setState(() {
+                        _practiceVocab = cs.classService.getPracticeVocab();
+                        _visibility = false;
+                      });
+                    },
+                    child: const Text("Pokračovat"),
+                  ),
                 ),
                 SwipableStack(
                   controller: controller,
@@ -310,6 +371,10 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                     print('$index, $direction');
                     _currentLexis = _practiceVocab[index].toList();
                     _handleSwipeDirection(direction, index);
+                    if (_counterNotifier.value[0] == 0 &&
+                        _counterNotifier.value[1] == 0) {
+                      _showGGDialog();
+                    }
                   },
                   allowVerticalSwipe: false,
                   stackClipBehaviour: Clip.none,

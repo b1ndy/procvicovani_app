@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../data/instructions.dart';
 import '../widgets/button_with_icon.dart';
 import '../widgets/my_app_bar.dart';
 
@@ -18,7 +18,7 @@ class ChoosePracticeType extends StatelessWidget {
           ButtonWithIcon(
             "Flash cards",
             "/flash-cards",
-            "Ve Flash cards... bla bla...",
+            flashCardsInfo,
           ),
         ],
       ),
