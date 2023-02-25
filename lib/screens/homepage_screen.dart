@@ -29,21 +29,44 @@ class HomepageScreen extends StatelessWidget {
                   color: Colors.white.withOpacity(0.8),
                   colorBlendMode: BlendMode.modulate,
                 ),
-                const Text(
-                  "Procvičování slovní zásoby",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontFamily: "Quicksand",
-                    fontWeight: FontWeight.w500,
-                    shadows: [
-                      Shadow(
-                        offset: Offset(1.5, 1.5),
-                        blurRadius: 3.0,
-                        color: Color.fromARGB(255, 0, 0, 0),
+                Column(
+                  children: const [
+                    Text(
+                      "Procvičování slovní zásoby",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontFamily: "Quicksand",
+                        fontWeight: FontWeight.w500,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 5.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      "učebnice Project Explore 1",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontFamily: "Quicksand",
+                        fontWeight: FontWeight.w500,
+                        shadows: [
+                          Shadow(
+                            offset: Offset(0, 0),
+                            blurRadius: 5.0,
+                            color: Color.fromARGB(255, 0, 0, 0),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -58,7 +81,7 @@ class HomepageScreen extends StatelessWidget {
               "Nastavení",
               SettingsScreen.routeName,
             ),
-            const InfButton("O Aplikaci"),
+            const InfButton("O aplikaci"),
           ],
         ),
       ),

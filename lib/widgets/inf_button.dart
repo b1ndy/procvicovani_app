@@ -20,7 +20,7 @@ class InfButton extends StatelessWidget {
         onPressed: () => showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('O Aplikaci'),
+            title: const Text('O aplikaci'),
             content: const Text('bla bla bla'),
             actions: <Widget>[
               TextButton(

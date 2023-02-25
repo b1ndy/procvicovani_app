@@ -81,6 +81,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     return Scaffold(
       appBar: MyAppBar("Vyber lekci"),
       body: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 70.0),
         itemBuilder: (ctx, index) {
           return Column(
             children: [
