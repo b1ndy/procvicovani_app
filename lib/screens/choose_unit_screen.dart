@@ -49,7 +49,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     );
   }
 
-  //fills PracticeVocab in DataServiceClass and if ist not empty then navigates to next page
+  //fills PracticeVocab in DataServiceClass and if its not empty then navigates to next page
   void confirmChoice() {
     final _practiceVocab = cs.classService.fillPracticeVocab(_lectureList);
     if (_practiceVocab == true) {

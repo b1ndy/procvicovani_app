@@ -1,4 +1,3 @@
-//napsat popis a návod flash cards
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
