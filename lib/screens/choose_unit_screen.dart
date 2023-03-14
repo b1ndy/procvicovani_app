@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import './choose_practice_type.dart';
-import '../widgets/my_app_bar.dart';
 import '../data/six_class_vocab.dart';
 import '../data/data_service_class.dart' as cs;
+import '../data/local_data_service.dart' as lds;
 
 class ChooseUnitScreen extends StatefulWidget {
   const ChooseUnitScreen({Key? key}) : super(key: key);
@@ -79,7 +80,19 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
   Widget build(BuildContext context) {
     final _unitList = _lectureList.keys.toList();
     return Scaffold(
-      appBar: MyAppBar("Vyber lekci"),
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: () {
+            lds.localDataService
+                .writeToFile(json.encode(cs.classService.getVocabList()),
+                    "sixClassVocab")
+                .then((value) => Navigator.of(context).pop());
+          },
+        ),
+        title: const Text("Vyber lekci"),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.only(bottom: 70.0),
         itemBuilder: (ctx, index) {

@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../data/data_service_class.dart' as cs;
+import '../data/local_data_service.dart' as lds;
 
 class ClassButton extends StatelessWidget {
   final String text;
   final String route;
-  final Map chosenVocab;
+  final String chosenVocab;
 
   // ignore: use_key_in_widget_constructors
   const ClassButton(
@@ -26,11 +28,30 @@ class ClassButton extends StatelessWidget {
       child: ElevatedButton(
         child: Text(text),
         onPressed: () {
-          cs.classService.fillVocabList(chosenVocab);
-          Navigator.pushNamed(
-            context,
-            route,
-          );
+          lds.localDataService.readFromFile(chosenVocab).then((value) {
+            if (value != "") {
+              cs.classService.fillVocabList(json.decode(value));
+              Navigator.pushNamed(
+                context,
+                route,
+              );
+            } else {
+              showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: const Text(
+                      'Tato třída ještě nebyla přidána do naší aplikace.'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, 'OK'),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          });
         },
       ),
     );

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import './choose_class_screen.dart';
@@ -7,8 +8,54 @@ import '../widgets/default_button.dart';
 import '../widgets/my_app_bar.dart';
 import "../widgets/inf_button.dart";
 
-class HomepageScreen extends StatelessWidget {
+import '../data/six_class_vocab.dart';
+import '../data/data_service_class.dart' as cs;
+import '../data/local_data_service.dart' as lds;
+
+class HomepageScreen extends StatefulWidget {
   const HomepageScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomepageScreen> createState() => _HomepageScreenState();
+}
+
+class _HomepageScreenState extends State<HomepageScreen>
+    with WidgetsBindingObserver {
+  void initState() {
+    super.initState();
+    //if file exists, nothing happens, if file doesn't exists it is created
+    lds.localDataService.localFile("sixClassVocab").then((value) {
+      if (!value.existsSync()) {
+        lds.localDataService
+            .writeToFile(json.encode(sixClassVocab), "sixClassVocab");
+      }
+    });
+    WidgetsBinding.instance?.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance?.removeObserver(this);
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.detached) return;
+
+    final isBackground = state == AppLifecycleState.paused;
+
+    if (isBackground) {
+      print("background");
+      lds.localDataService.writeToFile(
+          json.encode(cs.classService.getVocabList()), "sixClassVocab");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

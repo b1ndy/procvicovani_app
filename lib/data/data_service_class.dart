@@ -13,7 +13,10 @@ class ClassService {
     _vocabList = chosenClass.map((key, value) => MapEntry(
         key,
         value.map((key, value) => MapEntry(
-            key, value.map((e) => [e[0], e[1], "unknown"]).toList()))));
+            key,
+            value
+                .map((e) => [e[0], e[1], e.length == 3 ? e[2] : "unknown"])
+                .toList()))));
   }
 
   bool fillPracticeVocab(Map lectureList) {
@@ -77,6 +80,11 @@ class ClassService {
         element[2] = "unknown";
       }
     });
+  }
+
+  //returns _vocabList
+  Map getVocabList() {
+    return _vocabList;
   }
 
   //returns shuffled practiceVocabList
