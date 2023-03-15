@@ -36,13 +36,12 @@ class _HomepageScreenState extends State<HomepageScreen>
   @override
   void dispose() {
     WidgetsBinding.instance?.removeObserver(this);
-    // TODO: implement dispose
     super.dispose();
   }
 
+  //when background (eg closing app) save progress
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    // TODO: implement didChangeAppLifecycleState
     super.didChangeAppLifecycleState(state);
 
     if (state == AppLifecycleState.inactive ||
@@ -51,7 +50,6 @@ class _HomepageScreenState extends State<HomepageScreen>
     final isBackground = state == AppLifecycleState.paused;
 
     if (isBackground) {
-      print("background");
       lds.localDataService.writeToFile(
           json.encode(cs.classService.getVocabList()), "sixClassVocab");
     }

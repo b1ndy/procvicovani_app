@@ -1,11 +1,13 @@
-import 'package:flutter/material.dart';
-import '../widgets/my_app_bar.dart';
-
-//import - test
-import '../data/six_class_vocab.dart';
 import 'dart:convert';
-import '../data/data_service_class.dart' as cs;
-import '../data/local_data_service.dart' as svd;
+import 'package:flutter/material.dart';
+
+import '../widgets/my_app_bar.dart';
+import '../widgets/default_button.dart';
+
+import '../data/six_class_vocab.dart';
+import '../data/local_data_service.dart' as lds;
+
+//reset progress for each lecture separately
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -16,43 +18,52 @@ class SettingsScreen extends StatelessWidget {
     //test list
 
     return Scaffold(
-        appBar: MyAppBar("Nastavení"),
-        //body - test
-        body: Column(
-          children: [
-            ElevatedButton(
-                onPressed: (() {
-                  cs.classService.fillVocabList(sixClassVocab);
-                  final Map<String, dynamic> _lectureList = sixClassVocab.map(
-                      (key, value) => MapEntry(
-                          key, value.keys.map((e) => [e, false]).toList()));
-                  _lectureList["Introduction"]![2][1] = true;
-
-                  //encode to json string
-                  final String _jsonString = json.encode(_lectureList);
-                  //save to file
-                  svd.localDataService.writeToFile(_jsonString, "myMap");
-
-                  // cs.classService.fillPracticeVocab(_lectureList);
-                  // List _practiceVocab = cs.classService.getPracticeVocab();
-                  // print(_practiceVocab);
-
-                  //save to file
-                }),
-                child: const Text("Save File")),
-            ElevatedButton(
-                onPressed: (() {
-                  svd.localDataService
-                      .readFromFile("myMap")
-                      .then((value) => print(value));
-                }),
-                child: const Text("Read File")),
-            ElevatedButton(
-                onPressed: (() {
-                  svd.localDataService.writeToFile("", "myMap");
-                }),
-                child: const Text("Clear File")),
-          ],
-        ));
+      appBar: MyAppBar("Nastavení"),
+      //body - test
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: double.infinity,
+            height: 50,
+            margin: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            child: ElevatedButton(
+              child: const Text("Resetovat všechen postup"),
+              onPressed: () {
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Určitě?'),
+                    content: const Text(
+                        'Opravdu si přejete resetovat všechen postup?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          lds.localDataService.writeToFile(
+                              json.encode(sixClassVocab), "sixClassVocab");
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Ano'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Ne'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const DefaultButton(
+            "Resetovat pouze některé lekce",
+            routeName,
+          ),
+        ],
+      ),
+    );
   }
 }

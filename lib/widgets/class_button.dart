@@ -44,7 +44,7 @@ class ClassButton extends StatelessWidget {
                       'Tato třída ještě nebyla přidána do naší aplikace.'),
                   actions: <Widget>[
                     TextButton(
-                      onPressed: () => Navigator.pop(context, 'OK'),
+                      onPressed: () => Navigator.pop(context),
                       child: const Text('OK'),
                     ),
                   ],

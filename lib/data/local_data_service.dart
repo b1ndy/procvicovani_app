@@ -2,26 +2,26 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class LocalDataService {
+  //returns most commonly used path
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
     return directory.path;
   }
 
+  //returns path+filename
   Future<File> localFile(String fileName) async {
     final path = await _localPath;
     return File('$path/$fileName');
   }
 
-  //Map needs to be encoded to json String
+  //writes file - Map needs to be encoded to json String
   Future<File> writeToFile(String myMap, String fileName) async {
     final file = await localFile(fileName);
-
-    // Write the file
     return file.writeAsString(myMap);
   }
 
-  //String needs to be decoded to map from json String
+  //reads file - String needs to be decoded to map from json String
   Future<String> readFromFile(String fileName) async {
     try {
       final file = await localFile(fileName);
