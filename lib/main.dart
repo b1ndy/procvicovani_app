@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'screens/choose_class_screen.dart';
-import './screens/flash_cards_screen.dart';
-import './screens/choose_practice_type.dart';
-import './screens/homepage_screen.dart';
-import './screens/choose_unit_screen.dart';
-import './screens/settings_screen.dart';
+import 'screens/flash_cards_screen.dart';
+import 'screens/choose_practice_type.dart';
+import 'screens/homepage_screen.dart';
+import 'screens/choose_unit_screen.dart';
+import 'screens/settings_screen.dart';
+import 'screens/reset_unit_screen.dart';
+import 'screens/reset_choose_unit_screen.dart';
 
 void main() {
   // Step 2
@@ -50,6 +52,8 @@ class MyApp extends StatelessWidget {
         ChoosePracticeType.routeName: (ctx) => const ChoosePracticeType(),
         FlashCardsScreen.routeName: (ctx) => const FlashCardsScreen(),
         ChooseClassScreen.routeName: (ctx) => const ChooseClassScreen(),
+        ResetUnitScreen.routeName: (ctx) => const ResetUnitScreen(),
+        ResetChooseUnitScreen.routeName: (ctx) => const ResetChooseUnitScreen(),
       },
     );
   }

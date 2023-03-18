@@ -73,6 +73,12 @@ class ClassService {
     return [_unknown, _learning, _learned];
   }
 
+  void resetLecture(unit, lecture) {
+    _vocabList[unit][lecture].forEach((e) {
+      e[2] = "unknown";
+    });
+  }
+
   //sets all PracticeVocab to unknown
   void resetPracticeVocab() {
     _practiceVocab.forEach((key, value) {
@@ -86,6 +92,19 @@ class ClassService {
   Map getVocabList() {
     return _vocabList;
   }
+
+  //OLD CODE
+  // Map getVocabList1() {
+  //   Map<String, List<List>> _vocabList1 = {};
+  //   _vocabList.forEach((key, value) {
+  //     _vocabList1[key.toString()] = [];
+  //     value.forEach((k, v) {
+  //       _vocabList1[key.toString()]!.add([k, false]);
+  //     });
+  //   });
+  //   print(_vocabList1.runtimeType);
+  //   return _vocabList1;
+  // }
 
   //returns shuffled practiceVocabList
   List getPracticeVocab() {
@@ -101,7 +120,5 @@ class ClassService {
     return _practiceVocabList;
   }
 }
-
-//how to get mixed practiceVocab
 
 ClassService classService = ClassService();

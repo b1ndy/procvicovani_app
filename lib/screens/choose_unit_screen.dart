@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import './choose_practice_type.dart';
 import '../data/six_class_vocab.dart';
-import '../data/data_service_class.dart' as cs;
+import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
 class ChooseUnitScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class ChooseUnitScreen extends StatefulWidget {
 
 class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
   //list of unit and lectures
-  final Map<String, List<List>> _lectureList = sixClassVocab.map((key, value) =>
+  final Map _lectureList = dsc.classService.getVocabList().map((key, value) =>
       MapEntry(key, value.keys.map((e) => [e, false]).toList()));
 
   //builds UnitName with bottom border
@@ -50,9 +50,41 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     );
   }
 
+  //builds scrollable Unit List via ListView.builder
+  Widget _buildUnitList(_unitList) {
+    return ListView.builder(
+      padding: const EdgeInsets.only(bottom: 70.0),
+      itemBuilder: (ctx, index) {
+        return Column(
+          children: [
+            _buildUnitName(_unitList[index]),
+            Column(
+                children: _lectureList[_unitList[index]]!
+                    .map<Widget>((unit) => CheckboxListTile(
+                          value: unit[1],
+                          onChanged: (value) {
+                            setState(() {
+                              unit[1] = value!;
+                            });
+                          },
+                          title: Text(
+                            unit[0],
+                            style: const TextStyle(
+                              fontSize: 19,
+                            ),
+                          ),
+                        ))
+                    .toList()),
+          ],
+        );
+      },
+      itemCount: _lectureList.length,
+    );
+  }
+
   //fills PracticeVocab in DataServiceClass and if its not empty then navigates to next page
   void confirmChoice() {
-    final _practiceVocab = cs.classService.fillPracticeVocab(_lectureList);
+    final _practiceVocab = dsc.classService.fillPracticeVocab(_lectureList);
     if (_practiceVocab == true) {
       Navigator.pushNamed(
         context,
@@ -84,7 +116,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
         leading: BackButton(
           onPressed: () {
             lds.localDataService
-                .writeToFile(json.encode(cs.classService.getVocabList()),
+                .writeToFile(json.encode(dsc.classService.getVocabList()),
                     "sixClassVocab")
                 .then((value) => Navigator.of(context).pop());
           },
@@ -93,34 +125,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.only(bottom: 70.0),
-        itemBuilder: (ctx, index) {
-          return Column(
-            children: [
-              _buildUnitName(_unitList[index]),
-              Column(
-                  children: _lectureList[_unitList[index]]!
-                      .map((unit) => CheckboxListTile(
-                            value: unit[1],
-                            onChanged: (value) {
-                              setState(() {
-                                unit[1] = value!;
-                              });
-                            },
-                            title: Text(
-                              unit[0],
-                              style: const TextStyle(
-                                fontSize: 19,
-                              ),
-                            ),
-                          ))
-                      .toList()),
-            ],
-          );
-        },
-        itemCount: _lectureList.length,
-      ),
+      body: _buildUnitList(_unitList),
       floatingActionButton: FloatingActionButton(
         onPressed: confirmChoice,
         child: const Icon(
