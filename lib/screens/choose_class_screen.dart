@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './choose_lectures_screen.dart';
+
 import '../widgets/class_button.dart';
 import '../widgets/my_app_bar.dart';
 
@@ -17,7 +19,7 @@ class ChooseClassScreen extends StatelessWidget {
         children: const [
           ClassButton(
             "6. třída",
-            "/choose-unit",
+            ChooseLecturesScreen.routeName,
             "sixClassVocab",
           ),
         ],

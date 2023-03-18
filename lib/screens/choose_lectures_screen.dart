@@ -2,22 +2,23 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import './choose_practice_type.dart';
-import '../data/six_class_vocab.dart';
+
 import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
-class ChooseUnitScreen extends StatefulWidget {
-  const ChooseUnitScreen({Key? key}) : super(key: key);
-  static const routeName = "/choose-unit";
+class ChooseLecturesScreen extends StatefulWidget {
+  const ChooseLecturesScreen({Key? key}) : super(key: key);
+  static const routeName = "/choose-lectures";
 
   @override
-  State<ChooseUnitScreen> createState() => _ChooseUnitScreenState();
+  State<ChooseLecturesScreen> createState() => _ChooseLecturesScreenState();
 }
 
-class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
-  //list of unit and lectures
-  final Map _lectureList = dsc.classService.getVocabList().map((key, value) =>
-      MapEntry(key, value.keys.map((e) => [e, false]).toList()));
+class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
+  //list of units and lectures
+  final Map _lectureList = dsc.classService.getVocabList().map(
+      (unit, lectures) => MapEntry(
+          unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
 
   //builds UnitName with bottom border
   Widget _buildUnitName(String text) {
@@ -50,8 +51,8 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
     );
   }
 
-  //builds scrollable Unit List via ListView.builder
-  Widget _buildUnitList(_unitList) {
+  //builds scrollable LectureList via ListView.builder
+  Widget _buildLectureList(_unitList) {
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 70.0),
       itemBuilder: (ctx, index) {
@@ -60,15 +61,15 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
             _buildUnitName(_unitList[index]),
             Column(
                 children: _lectureList[_unitList[index]]!
-                    .map<Widget>((unit) => CheckboxListTile(
-                          value: unit[1],
+                    .map<Widget>((lecture) => CheckboxListTile(
+                          value: lecture[1],
                           onChanged: (value) {
                             setState(() {
-                              unit[1] = value!;
+                              lecture[1] = value!;
                             });
                           },
                           title: Text(
-                            unit[0],
+                            lecture[0],
                             style: const TextStyle(
                               fontSize: 19,
                             ),
@@ -125,7 +126,7 @@ class _ChooseUnitScreenState extends State<ChooseUnitScreen> {
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
-      body: _buildUnitList(_unitList),
+      body: _buildLectureList(_unitList),
       floatingActionButton: FloatingActionButton(
         onPressed: confirmChoice,
         child: const Icon(

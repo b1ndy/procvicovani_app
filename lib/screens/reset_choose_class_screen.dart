@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
+import './reset_choose_lectures_screen.dart';
+
 import '../widgets/class_button.dart';
 import '../widgets/my_app_bar.dart';
 
-class ResetChooseUnitScreen extends StatelessWidget {
-  const ResetChooseUnitScreen({Key? key}) : super(key: key);
-  static const routeName = "/choose-reset-unit";
+class ResetChooseClassScreen extends StatelessWidget {
+  const ResetChooseClassScreen({Key? key}) : super(key: key);
+  static const routeName = "/reset-choose-class";
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class ResetChooseUnitScreen extends StatelessWidget {
         children: const [
           ClassButton(
             "6. třída",
-            "/reset-unit",
+            ResetChooseLecturesScreen.routeName,
             "sixClassVocab",
           ),
         ],

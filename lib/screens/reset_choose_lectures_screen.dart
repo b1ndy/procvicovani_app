@@ -6,15 +6,15 @@ import '../widgets/my_app_bar.dart';
 import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
-class ResetUnitScreen extends StatefulWidget {
-  const ResetUnitScreen({Key? key}) : super(key: key);
-  static const routeName = "/reset-unit";
+class ResetChooseLecturesScreen extends StatefulWidget {
+  const ResetChooseLecturesScreen({Key? key}) : super(key: key);
+  static const routeName = "/reset-choose-lectures";
 
   @override
-  State<ResetUnitScreen> createState() => _ResetUnitScreenState();
+  State<ResetChooseLecturesScreen> createState() => _ResetLecturesScreenState();
 }
 
-class _ResetUnitScreenState extends State<ResetUnitScreen> {
+class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
   //OLD CODE
   // final Map<String, List<List>> _lectureList1 = sixClassVocab.map((key, value) {
   //   return MapEntry(
@@ -78,8 +78,8 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
     );
   }
 
-  //builds scrollable Unit List via ListView.builder
-  Widget _buildUnitList(_unitList) {
+  //builds scrollable LectureList via ListView.builder
+  Widget _buildLectureList(_unitList) {
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 70.0),
       itemBuilder: (ctx, index) {
@@ -88,12 +88,12 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
             _buildUnitName(_unitList[index]),
             Column(
                 children: _lectureList[_unitList[index]]
-                    .map<Widget>((unit) => CheckboxListTile(
+                    .map<Widget>((lecture) => CheckboxListTile(
                           //NEEDS TO BE TOLD THAT WE MAP WIDGETS <Widget>
-                          value: unit[1],
+                          value: lecture[1],
                           onChanged: (value) {
                             setState(() {
-                              unit[1] = value!;
+                              lecture[1] = value!;
                             });
                           },
                           title: FittedBox(
@@ -102,13 +102,13 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
                             child: Row(
                               children: [
                                 Text(
-                                  unit[0],
+                                  lecture[0],
                                   style: const TextStyle(
                                     fontSize: 19,
                                   ),
                                 ),
                                 Text(
-                                  unit[2],
+                                  lecture[2],
                                   style: const TextStyle(
                                     fontSize: 20,
                                     color: Color.fromARGB(255, 154, 154, 154),
@@ -132,7 +132,7 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
 
     return Scaffold(
       appBar: MyAppBar("Reset lekcí"),
-      body: _buildUnitList(_unitList),
+      body: _buildLectureList(_unitList),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //gose through selected and resets them
@@ -144,11 +144,11 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
             }
           });
           //goes through VocabList and refreshes knownCount in _lectureList
-          dsc.classService.getVocabList().forEach((unit, value) {
+          dsc.classService.getVocabList().forEach((unit, lectures) {
             int knownCount = 0;
             int lectureIndex = 0;
-            value.keys.forEach((lecture) {
-              value[lecture].forEach((i) {
+            lectures.keys.forEach((lecture) {
+              lectures[lecture].forEach((i) {
                 if (i[2] == "learned") {
                   knownCount++;
                 }
@@ -156,7 +156,7 @@ class _ResetUnitScreenState extends State<ResetUnitScreen> {
               _lectureList[unit][lectureIndex][2] = " " +
                   knownCount.toString() +
                   "/" +
-                  value[lecture].length.toString();
+                  lectures[lecture].length.toString();
               lectureIndex++;
             });
           });

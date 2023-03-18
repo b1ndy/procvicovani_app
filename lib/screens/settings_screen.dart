@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:procvicovani_app/screens/reset_choose_unit_screen.dart';
 
-import './reset_unit_screen.dart';
+import './reset_choose_class_screen.dart';
 
 import '../widgets/my_app_bar.dart';
 import '../widgets/default_button.dart';
@@ -63,7 +62,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           const DefaultButton(
             "Resetovat pouze některé lekce",
-            ResetChooseUnitScreen.routeName,
+            ResetChooseClassScreen.routeName,
           ),
         ],
       ),

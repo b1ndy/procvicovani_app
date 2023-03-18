@@ -5,10 +5,10 @@ import 'screens/choose_class_screen.dart';
 import 'screens/flash_cards_screen.dart';
 import 'screens/choose_practice_type.dart';
 import 'screens/homepage_screen.dart';
-import 'screens/choose_unit_screen.dart';
+import 'screens/choose_lectures_screen.dart';
 import 'screens/settings_screen.dart';
-import 'screens/reset_unit_screen.dart';
-import 'screens/reset_choose_unit_screen.dart';
+import 'screens/reset_choose_lectures_screen.dart';
+import 'screens/reset_choose_class_screen.dart';
 
 void main() {
   // Step 2
@@ -48,12 +48,14 @@ class MyApp extends StatelessWidget {
       routes: {
         "/": (ctx) => const HomepageScreen(),
         SettingsScreen.routeName: (ctx) => const SettingsScreen(),
-        ChooseUnitScreen.routeName: (ctx) => const ChooseUnitScreen(),
+        ChooseLecturesScreen.routeName: (ctx) => const ChooseLecturesScreen(),
         ChoosePracticeType.routeName: (ctx) => const ChoosePracticeType(),
         FlashCardsScreen.routeName: (ctx) => const FlashCardsScreen(),
         ChooseClassScreen.routeName: (ctx) => const ChooseClassScreen(),
-        ResetUnitScreen.routeName: (ctx) => const ResetUnitScreen(),
-        ResetChooseUnitScreen.routeName: (ctx) => const ResetChooseUnitScreen(),
+        ResetChooseLecturesScreen.routeName: (ctx) =>
+            const ResetChooseLecturesScreen(),
+        ResetChooseClassScreen.routeName: (ctx) =>
+            const ResetChooseClassScreen(),
       },
     );
   }
