@@ -20,6 +20,11 @@ class ChoosePracticeType extends StatelessWidget {
             "/flash-cards",
             flashCardsInfo,
           ),
+          ButtonWithIcon(
+            "Choose one",
+            "/choose-one",
+            chooseOneInfo,
+          ),
         ],
       ),
     );

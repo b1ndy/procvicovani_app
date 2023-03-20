@@ -9,6 +9,7 @@ import 'screens/choose_lectures_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/reset_choose_lectures_screen.dart';
 import 'screens/reset_choose_class_screen.dart';
+import "screens/choose_one_screen.dart";
 
 void main() {
   // Step 2
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
             const ResetChooseLecturesScreen(),
         ResetChooseClassScreen.routeName: (ctx) =>
             const ResetChooseClassScreen(),
+        ChooseOneScreen.routeName: (ctx) => const ChooseOneScreen(),
       },
     );
   }

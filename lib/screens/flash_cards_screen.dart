@@ -367,7 +367,6 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                     );
                   },
                   onSwipeCompleted: (index, direction) {
-                    print('$index, $direction');
                     _currentLexis = _practiceVocab[index].toList();
                     _handleSwipeDirection(direction, index);
                     if (_counterNotifier.value[0] == 0 &&

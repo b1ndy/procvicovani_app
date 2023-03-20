@@ -21,6 +21,7 @@ class HomepageScreen extends StatefulWidget {
 
 class _HomepageScreenState extends State<HomepageScreen>
     with WidgetsBindingObserver {
+  @override
   void initState() {
     super.initState();
     //if file exists, nothing happens, if file doesn't exists it is created
