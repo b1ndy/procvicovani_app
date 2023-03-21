@@ -103,6 +103,62 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
     );
   }
 
+  Widget _buildCounter(height) {
+    return Container(
+      padding: const EdgeInsets.only(
+        bottom: 10,
+      ),
+      alignment: Alignment.bottomCenter,
+      height: height * 0.1,
+      child: const Text(
+        "4/6",
+        style: TextStyle(
+          fontSize: 20,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextBox(text, height) {
+    return Container(
+      height: height * 0.3,
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        border: Border.symmetric(
+          horizontal: BorderSide(
+            width: 1.2,
+            color: Color.fromRGBO(171, 171, 171, 1),
+          ),
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          stops: [
+            0,
+            0.15,
+            0.5,
+            0.85,
+            1,
+          ],
+          colors: [
+            Color.fromARGB(255, 70, 70, 70),
+            Color.fromARGB(255, 49, 49, 49),
+            Color.fromARGB(255, 39, 39, 39),
+            Color.fromARGB(255, 49, 49, 49),
+            Color.fromARGB(255, 70, 70, 70),
+          ],
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 30,
+        ),
+      ),
+    );
+  }
+
   Widget _buildButton(text) {
     return Container(
       width: double.infinity,
@@ -151,6 +207,23 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
     );
   }
 
+  _buildButtonSection(text1, text2, text3, text4, height) {
+    return Container(
+      height: height * 0.6,
+      padding: const EdgeInsets.only(
+        top: 20,
+      ),
+      child: Column(
+        children: [
+          _buildButton(text1),
+          _buildButton(text2),
+          _buildButton(text3),
+          _buildButton(text4),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
@@ -175,12 +248,22 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
     return Scaffold(
       appBar: appBar,
       endDrawer: _buildDrawer(),
-      body: Column(children: [
-        _buildButton("A:........"),
-        _buildButton("B:........"),
-        _buildButton("C:........"),
-        _buildButton("D:........"),
-      ]),
+      body: Column(
+        children: [
+          _buildCounter(_availableHeight),
+          _buildTextBox(
+            "plane",
+            _availableHeight,
+          ),
+          _buildButtonSection(
+            "A:....",
+            "B:....",
+            "C:....",
+            "D:....",
+            _availableHeight,
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton.extended(
           label: const Text("Zpět"),
           icon: const Icon(Icons.restart_alt),
