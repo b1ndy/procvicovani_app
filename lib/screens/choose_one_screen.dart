@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../data/choose_one_screen_data.dart';
 import '../data/data_service_class.dart' as cs;
 import '../data/instructions.dart';
 
@@ -12,9 +14,16 @@ class ChooseOneScreen extends StatefulWidget {
 }
 
 class _ChooseOneScreenState extends State<ChooseOneScreen> {
-  final String _language = "Angličtina";
+  String _language = "Angličtina";
   bool _isSwitched = false;
-  final List _practiceVocab = cs.classService.getPracticeVocab();
+  int _vocabIndex = 0;
+  int _correct = 0;
+  int _incorrect = 0;
+  List _practiceVocab = cs.classService.getPracticeVocab();
+  //setting default
+  final ValueNotifier<BoxDecoration> _textBoxDecoration =
+      ValueNotifier(textBoxDefault);
+  final ValueNotifier<bool> _isDisabled = ValueNotifier(false);
 
   Widget _buildDrawer() {
     return Drawer(
@@ -40,7 +49,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Přední strana: $_language"),
+                Text("Zadané slovo: $_language"),
                 Switch(
                   activeColor: Colors.grey.shade400,
                   activeTrackColor: Colors.grey.shade600,
@@ -48,6 +57,11 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                   onChanged: (value) {
                     setState(() {
                       _isSwitched = value;
+                      if (_language == "Angličtina") {
+                        _language = "Čeština";
+                      } else {
+                        _language = "Angličtina";
+                      }
                     });
                   },
                 ),
@@ -60,6 +74,13 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
             ),
             title: const Text("Restartovat"),
             onTap: () {
+              setState(() {
+                _correct = 0;
+                _incorrect = 0;
+                _vocabIndex = 0;
+                _practiceVocab = cs.classService.getPracticeVocab();
+                _isDisabled.value = false;
+              });
               Navigator.pop(context);
             },
           ),
@@ -110,9 +131,9 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
       ),
       alignment: Alignment.bottomCenter,
       height: height * 0.1,
-      child: const Text(
-        "4/6",
-        style: TextStyle(
+      child: Text(
+        (_vocabIndex + 1).toString() + "/" + (_practiceVocab.length).toString(),
+        style: const TextStyle(
           fontSize: 20,
         ),
       ),
@@ -120,91 +141,151 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
   }
 
   Widget _buildTextBox(text, height) {
-    return Container(
-      height: height * 0.3,
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        border: Border.symmetric(
-          horizontal: BorderSide(
-            width: 1.2,
-            color: Color.fromRGBO(171, 171, 171, 1),
+    return ValueListenableBuilder(
+      valueListenable: _textBoxDecoration,
+      builder: (context, BoxDecoration value, _) {
+        return Container(
+          height: height * 0.3,
+          width: double.infinity,
+          decoration: value,
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 30,
+            ),
           ),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [
-            0,
-            0.15,
-            0.5,
-            0.85,
-            1,
-          ],
-          colors: [
-            Color.fromARGB(255, 70, 70, 70),
-            Color.fromARGB(255, 49, 49, 49),
-            Color.fromARGB(255, 39, 39, 39),
-            Color.fromARGB(255, 49, 49, 49),
-            Color.fromARGB(255, 70, 70, 70),
-          ],
-        ),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 30,
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildButton(text) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      margin: const EdgeInsets.symmetric(
-        vertical: 10,
-        horizontal: 20,
-      ),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          stops: [
-            0,
-            0.25,
-            0.5,
-            0.75,
-            1,
-          ],
-          colors: [
-            Color.fromARGB(255, 116, 116, 116),
-            Color.fromARGB(255, 82, 82, 82),
-            Color.fromARGB(255, 66, 66, 66),
-            Color.fromARGB(255, 82, 82, 82),
-            Color.fromARGB(255, 116, 116, 116),
-          ],
-        ),
-        borderRadius: BorderRadius.all(
-          Radius.circular(30),
-        ),
-      ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(text),
-        ),
-        onPressed: () {},
-      ),
-    );
+    return ValueListenableBuilder(
+        valueListenable: _isDisabled,
+        builder: (context, bool value, _) {
+          return Container(
+            width: double.infinity,
+            height: 50,
+            margin: const EdgeInsets.symmetric(
+              vertical: 10,
+              horizontal: 20,
+            ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: [
+                  0,
+                  0.25,
+                  0.5,
+                  0.75,
+                  1,
+                ],
+                colors: [
+                  Color.fromARGB(255, 116, 116, 116),
+                  Color.fromARGB(255, 82, 82, 82),
+                  Color.fromARGB(255, 66, 66, 66),
+                  Color.fromARGB(255, 82, 82, 82),
+                  Color.fromARGB(255, 116, 116, 116),
+                ],
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(30),
+              ),
+            ),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(text),
+              ),
+              onPressed: value == true
+                  ? null
+                  : () {
+                      _isDisabled.value = true;
+                      if (text ==
+                          _practiceVocab[_vocabIndex]
+                              [_language == "Angličtina" ? 1 : 0]) {
+                        _correct++;
+                        _textBoxDecoration.value = textBoxGreen;
+                      } else {
+                        _incorrect++;
+                        _textBoxDecoration.value = textBoxRed;
+                      }
+                      Timer(const Duration(milliseconds: 300), () {
+                        if (_vocabIndex + 1 != _practiceVocab.length) {
+                          _textBoxDecoration.value = textBoxDefault;
+                          _isDisabled.value = false;
+                          setState(() {
+                            _vocabIndex++;
+                          });
+                        } else {
+                          _textBoxDecoration.value = textBoxDefault;
+                          showDialog<String>(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: const Text("Skvělá práce!"),
+                              content: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(text: 'Měl jsi '),
+                                    TextSpan(
+                                      text: _correct.toString(),
+                                      style: const TextStyle(
+                                        // fontWeight: FontWeight.bold,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    const TextSpan(
+                                        text: ' slovíčka správně a '),
+                                    TextSpan(
+                                      text: _incorrect.toString(),
+                                      style: const TextStyle(
+                                        // fontWeight: FontWeight.bold,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                    const TextSpan(text: ' špatně.'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _correct = 0;
+                                      _incorrect = 0;
+                                      _vocabIndex = 0;
+                                      _practiceVocab =
+                                          cs.classService.getPracticeVocab();
+                                      _isDisabled.value = false;
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Restart'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      });
+                    },
+            ),
+          );
+        });
   }
 
   _buildButtonSection(text1, text2, text3, text4, height) {
@@ -244,7 +325,27 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
         84;
-    final _availableWidth = MediaQuery.of(context).size.width;
+    final List _wordList = _practiceVocab
+        .map((e) => e[_language == "Angličtina" ? 1 : 0])
+        .toList();
+    List _buttonTexts = [_wordList[_vocabIndex]];
+    _wordList.removeAt(_vocabIndex);
+    for (int i = 0; i < 3; i++) {
+      if (_wordList.isEmpty) {
+        break;
+      }
+      _wordList.shuffle();
+      _buttonTexts.add(_wordList[0]);
+      _wordList.removeAt(0);
+    }
+    if (_buttonTexts.length < 4) {
+      int rep = 4 - _buttonTexts.length;
+      for (int i = 0; i < rep; i++) {
+        _buttonTexts.add("");
+      }
+    }
+    _buttonTexts.shuffle();
+
     return Scaffold(
       appBar: appBar,
       endDrawer: _buildDrawer(),
@@ -252,25 +353,18 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
         children: [
           _buildCounter(_availableHeight),
           _buildTextBox(
-            "plane",
+            _practiceVocab[_vocabIndex][_language == "Angličtina" ? 0 : 1],
             _availableHeight,
           ),
           _buildButtonSection(
-            "A:....",
-            "B:....",
-            "C:....",
-            "D:....",
+            _buttonTexts[0],
+            _buttonTexts[1],
+            _buttonTexts[2],
+            _buttonTexts[3],
             _availableHeight,
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          label: const Text("Zpět"),
-          icon: const Icon(Icons.restart_alt),
-          elevation: 2,
-          backgroundColor: Colors.grey.shade700,
-          foregroundColor: Colors.grey.shade300,
-          onPressed: () {}),
     );
   }
 }
