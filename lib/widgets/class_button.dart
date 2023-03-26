@@ -30,7 +30,7 @@ class ClassButton extends StatelessWidget {
         onPressed: () {
           lds.localDataService.readFromFile(chosenVocab).then((value) {
             if (value != "") {
-              cs.classService.fillVocabList(json.decode(value));
+              cs.dataServiceClass.fillVocabList(json.decode(value));
               Navigator.pushNamed(
                 context,
                 route,

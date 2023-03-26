@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
-import '../data/data_service_class.dart' as cs;
+import '../data/data_service_class.dart' as dsc;
 import '../data/instructions.dart';
 
 class FlashCardsScreen extends StatefulWidget {
@@ -21,11 +21,11 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
   bool _isSwitched = false;
   int _cardState1 = 0;
   int _cardState2 = 1;
-  List _practiceVocab = cs.classService.getPracticeVocab();
+  List _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
   final controller = SwipableStackController();
   //ValueNotifier if changed ValueListenableBuilder will refresh
   final ValueNotifier<List<int>> _counterNotifier =
-      ValueNotifier(cs.classService.getCounters());
+      ValueNotifier(dsc.dataServiceClass.getCounters());
 
   Widget _buildDrawer() {
     return Drawer(
@@ -80,10 +80,10 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
             title: const Text("Restartovat"),
             onTap: () {
               controller.currentIndex = 0;
-              cs.classService.resetPracticeVocab();
-              _counterNotifier.value = cs.classService.getCounters();
+              dsc.dataServiceClass.resetPracticeVocab();
+              _counterNotifier.value = dsc.dataServiceClass.getCounters();
               setState(() {
-                _practiceVocab = cs.classService.getPracticeVocab();
+                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
               });
               Navigator.pop(context);
             },
@@ -187,10 +187,10 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           TextButton(
             onPressed: () {
               controller.currentIndex = 0;
-              cs.classService.resetPracticeVocab();
-              _counterNotifier.value = cs.classService.getCounters();
+              dsc.dataServiceClass.resetPracticeVocab();
+              _counterNotifier.value = dsc.dataServiceClass.getCounters();
               setState(() {
-                _practiceVocab = cs.classService.getPracticeVocab();
+                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
               });
               Navigator.pop(context);
             },
@@ -249,19 +249,23 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
   void _handleSwipeDirection(direction, index) {
     if (direction == SwipeDirection.right) {
       if (_practiceVocab[index][2] == "unknown") {
-        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
+        dsc.dataServiceClass
+            .setPracticeVocab(_practiceVocab[index][0], "learning");
         _setCounter("unknown", "learning", index);
       } else if (_practiceVocab[index][2] == "learning") {
-        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learned");
+        dsc.dataServiceClass
+            .setPracticeVocab(_practiceVocab[index][0], "learned");
         _setCounter("learning", "learned", index);
       }
     }
     if (direction == SwipeDirection.left) {
       if (_practiceVocab[index][2] == "learned") {
-        cs.classService.setPracticeVocab(_practiceVocab[index][0], "learning");
+        dsc.dataServiceClass
+            .setPracticeVocab(_practiceVocab[index][0], "learning");
         _setCounter("learned", "learning", index);
       } else if (_practiceVocab[index][2] == "learning") {
-        cs.classService.setPracticeVocab(_practiceVocab[index][0], "unknown");
+        dsc.dataServiceClass
+            .setPracticeVocab(_practiceVocab[index][0], "unknown");
         _setCounter("learning", "unknown", index);
       }
     }
@@ -339,7 +343,8 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
                     onPressed: () {
                       controller.currentIndex = 0;
                       setState(() {
-                        _practiceVocab = cs.classService.getPracticeVocab();
+                        _practiceVocab =
+                            dsc.dataServiceClass.getPracticeVocab();
                         _visibility = false;
                       });
                     },
@@ -390,10 +395,10 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           foregroundColor: Colors.grey.shade300,
           onPressed: () {
             if (_currentLexis.isNotEmpty) {
-              cs.classService
+              dsc.dataServiceClass
                   .setPracticeVocab(_currentLexis[0], _currentLexis[2]);
               controller.rewind();
-              _counterNotifier.value = cs.classService.getCounters();
+              _counterNotifier.value = dsc.dataServiceClass.getCounters();
             }
           }),
     );

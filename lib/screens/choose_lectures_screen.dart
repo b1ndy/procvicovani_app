@@ -16,7 +16,7 @@ class ChooseLecturesScreen extends StatefulWidget {
 
 class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
   //list of units and lectures
-  final Map _lectureList = dsc.classService.getVocabList().map(
+  final Map _lectureList = dsc.dataServiceClass.getVocabList().map(
       (unit, lectures) => MapEntry(
           unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
 
@@ -85,7 +85,7 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
 
   //fills PracticeVocab in DataServiceClass and if its not empty then navigates to next page
   void confirmChoice() {
-    final _practiceVocab = dsc.classService.fillPracticeVocab(_lectureList);
+    final _practiceVocab = dsc.dataServiceClass.fillPracticeVocab(_lectureList);
     if (_practiceVocab == true) {
       Navigator.pushNamed(
         context,
@@ -117,7 +117,7 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
         leading: BackButton(
           onPressed: () {
             lds.localDataService
-                .writeToFile(json.encode(dsc.classService.getVocabList()),
+                .writeToFile(json.encode(dsc.dataServiceClass.getVocabList()),
                     "sixClassVocab")
                 .then((value) => Navigator.of(context).pop());
           },

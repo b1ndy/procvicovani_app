@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../data/choose_one_screen_data.dart';
-import '../data/data_service_class.dart' as cs;
+import '../data/data_service_class.dart' as dsc;
 import '../data/instructions.dart';
 
 class ChooseOneScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
   int _vocabIndex = 0;
   int _correct = 0;
   int _incorrect = 0;
-  List _practiceVocab = cs.classService.getPracticeVocab();
+  List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
   //setting default
   final ValueNotifier<BoxDecoration> _textBoxDecoration =
       ValueNotifier(textBoxDefault);
@@ -78,7 +78,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                 _correct = 0;
                 _incorrect = 0;
                 _vocabIndex = 0;
-                _practiceVocab = cs.classService.getPracticeVocab();
+                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
                 _isDisabled.value = false;
               });
               Navigator.pop(context);
@@ -263,8 +263,8 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                                       _correct = 0;
                                       _incorrect = 0;
                                       _vocabIndex = 0;
-                                      _practiceVocab =
-                                          cs.classService.getPracticeVocab();
+                                      _practiceVocab = dsc.dataServiceClass
+                                          .getPracticeVocab();
                                       _isDisabled.value = false;
                                     });
                                     Navigator.pop(context);

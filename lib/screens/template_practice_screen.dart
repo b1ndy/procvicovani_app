@@ -15,7 +15,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
   final String _language = "Angličtina";
   bool _isSwitched = false;
   // ignore: unused_field
-  final List _practiceVocab = cs.classService.getPracticeVocab();
+  final List _practiceVocab = cs.dataServiceClass.getPracticeVocab();
 
   Widget _buildDrawer() {
     return Drawer(

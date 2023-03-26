@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../data/instructions.dart';
+
 class InfButton extends StatelessWidget {
   final String text;
 
@@ -21,7 +23,7 @@ class InfButton extends StatelessWidget {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             title: const Text('O aplikaci'),
-            content: const Text('bla bla bla'),
+            content: Text(oAplikaci),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, 'OK'),

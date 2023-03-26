@@ -52,7 +52,7 @@ class _HomepageScreenState extends State<HomepageScreen>
 
     if (isBackground) {
       lds.localDataService.writeToFile(
-          json.encode(cs.classService.getVocabList()), "sixClassVocab");
+          json.encode(cs.dataServiceClass.getVocabList()), "sixClassVocab");
     }
   }
 

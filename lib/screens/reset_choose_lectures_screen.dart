@@ -26,7 +26,7 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
 
   //list of units and lectures + known word count
   final Map _lectureList =
-      dsc.classService.getVocabList().map((unit, lectures) {
+      dsc.dataServiceClass.getVocabList().map((unit, lectures) {
     return MapEntry(
         unit,
         lectures.keys.map((lecture) {
@@ -139,12 +139,12 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
           _lectureList.forEach((key, value) {
             for (var lecture in value) {
               if (lecture[1] == true) {
-                dsc.classService.resetLecture(key, lecture[0]);
+                dsc.dataServiceClass.resetLecture(key, lecture[0]);
               }
             }
           });
           //goes through VocabList and refreshes knownCount in _lectureList
-          dsc.classService.getVocabList().forEach((unit, lectures) {
+          dsc.dataServiceClass.getVocabList().forEach((unit, lectures) {
             int knownCount = 0;
             int lectureIndex = 0;
             lectures.keys.forEach((lecture) {
@@ -162,8 +162,8 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
           });
           //saves changes to file and rebuilds page
           lds.localDataService
-              .writeToFile(
-                  json.encode(dsc.classService.getVocabList()), "sixClassVocab")
+              .writeToFile(json.encode(dsc.dataServiceClass.getVocabList()),
+                  "sixClassVocab")
               .then((value) => setState(() {}));
         },
         child: const Icon(

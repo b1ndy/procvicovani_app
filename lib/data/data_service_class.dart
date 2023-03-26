@@ -3,7 +3,7 @@
 //_vocabList - všechna slovíčka i se statusem
 //_practiceVocab - vybrané lekce mapa [unit, lekce] : [slovíčka]
 //_practiceVocabList - [slovíčka]
-class ClassService {
+class DataServiceClass {
   Map _vocabList = {};
   Map _practiceVocab = {};
 
@@ -119,6 +119,18 @@ class ClassService {
     _practiceVocabList.shuffle();
     return _practiceVocabList;
   }
+
+  //returns whole shuffled practiceVocabList (with learned)
+  List getAllPracticeVocab() {
+    List _practiceVocabList = [];
+    _practiceVocab.forEach((key, value) {
+      for (var e in value) {
+        _practiceVocabList.add(e);
+      }
+    });
+    _practiceVocabList.shuffle();
+    return _practiceVocabList;
+  }
 }
 
-ClassService classService = ClassService();
+DataServiceClass dataServiceClass = DataServiceClass();
