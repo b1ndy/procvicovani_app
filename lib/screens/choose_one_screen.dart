@@ -290,7 +290,6 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
 
   _buildButtonSection(text1, text2, text3, text4, height) {
     return Container(
-      height: height * 0.6,
       padding: const EdgeInsets.only(
         top: 20,
       ),

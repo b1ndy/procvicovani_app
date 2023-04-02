@@ -23,7 +23,7 @@ class InfButton extends StatelessWidget {
           context: context,
           builder: (BuildContext context) => AlertDialog(
             title: const Text('O aplikaci'),
-            content: Text(oAplikaci),
+            content: const Text(oAplikaci),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, 'OK'),
