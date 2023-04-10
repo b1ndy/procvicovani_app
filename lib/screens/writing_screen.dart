@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../data/practice_toolbox.dart';
 import '../data/data_service_class.dart' as dsc;
 import '../data/instructions.dart';
 
-class ChooseOneScreen extends StatefulWidget {
-  const ChooseOneScreen({Key? key}) : super(key: key);
-  static const routeName = "/choose-one";
+class WritingScreen extends StatefulWidget {
+  const WritingScreen({Key? key}) : super(key: key);
+  static const routeName = "/writing";
 
   @override
-  State<ChooseOneScreen> createState() => _ChooseOneScreenState();
+  State<WritingScreen> createState() => _WritingScreenState();
 }
 
-class _ChooseOneScreenState extends State<ChooseOneScreen> {
-  final String _language = "Angličtina";
+class _WritingScreenState extends State<WritingScreen> {
+  String _language = "Angličtina";
   bool _isSwitched = false;
-  // ignore: unused_field
-  final List _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+  int _vocabIndex = 0;
+  int _correct = 0;
+  int _incorrect = 0;
+  TextEditingController _vocabController = TextEditingController();
+  List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
+  //setting default
+  final ValueNotifier<BoxDecoration> _textBoxDecoration =
+      ValueNotifier(textBoxDefault);
+  final ValueNotifier<bool> _isDisabled = ValueNotifier(false);
 
   Widget _buildDrawer() {
     return Drawer(
@@ -41,7 +49,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Přední strana: $_language"),
+                Text("Zadané slovo: $_language"),
                 Switch(
                   activeColor: Colors.grey.shade400,
                   activeTrackColor: Colors.grey.shade600,
@@ -49,6 +57,11 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                   onChanged: (value) {
                     setState(() {
                       _isSwitched = value;
+                      if (_language == "Angličtina") {
+                        _language = "Čeština";
+                      } else {
+                        _language = "Angličtina";
+                      }
                     });
                   },
                 ),
@@ -61,6 +74,13 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
             ),
             title: const Text("Restartovat"),
             onTap: () {
+              setState(() {
+                _correct = 0;
+                _incorrect = 0;
+                _vocabIndex = 0;
+                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                _isDisabled.value = false;
+              });
               Navigator.pop(context);
             },
           ),
@@ -124,25 +144,66 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
         84;
-    final _availableWidth = MediaQuery.of(context).size.width;
+    final List _wordList = _practiceVocab
+        .map((e) => e[_language == "Angličtina" ? 1 : 0])
+        .toList();
+    List _buttonTexts = [_wordList[_vocabIndex]];
+    _wordList.removeAt(_vocabIndex);
+    for (int i = 0; i < 3; i++) {
+      if (_wordList.isEmpty) {
+        break;
+      }
+      _wordList.shuffle();
+      _buttonTexts.add(_wordList[0]);
+      _wordList.removeAt(0);
+    }
+    if (_buttonTexts.length < 4) {
+      int rep = 4 - _buttonTexts.length;
+      for (int i = 0; i < rep; i++) {
+        _buttonTexts.add("");
+      }
+    }
+    _buttonTexts.shuffle();
+
     return Scaffold(
       appBar: appBar,
       endDrawer: _buildDrawer(),
-      body: Column(
-        children: [
-          SizedBox(
-            height: _availableHeight * 0.7,
-            width: _availableWidth * 0.85,
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            buildCounter(_availableHeight, _vocabIndex, _practiceVocab),
+            buildTextBox(
+              _practiceVocab[_vocabIndex][_language == "Angličtina" ? 0 : 1],
+              _availableHeight,
+              _textBoxDecoration,
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: _vocabController,
+                decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: Colors.grey.shade400,
+                    ),
+                  ),
+                  hintText: 'Enter Czech Translation',
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-          label: const Text("Zpět"),
-          icon: const Icon(Icons.restart_alt),
-          elevation: 2,
-          backgroundColor: Colors.grey.shade700,
-          foregroundColor: Colors.grey.shade300,
-          onPressed: () {}),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.chevron_right_rounded,
+        ),
+      ),
     );
   }
 }

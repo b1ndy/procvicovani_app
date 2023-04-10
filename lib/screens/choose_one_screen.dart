@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../data/choose_one_screen_data.dart';
+import '../data/practice_toolbox.dart';
 import '../data/data_service_class.dart' as dsc;
 import '../data/instructions.dart';
 
@@ -121,42 +121,6 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCounter(height) {
-    return Container(
-      padding: const EdgeInsets.only(
-        bottom: 10,
-      ),
-      alignment: Alignment.bottomCenter,
-      height: height * 0.1,
-      child: Text(
-        (_vocabIndex + 1).toString() + "/" + (_practiceVocab.length).toString(),
-        style: const TextStyle(
-          fontSize: 20,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextBox(text, height) {
-    return ValueListenableBuilder(
-      valueListenable: _textBoxDecoration,
-      builder: (context, BoxDecoration value, _) {
-        return Container(
-          height: height * 0.3,
-          width: double.infinity,
-          decoration: value,
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 30,
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -350,10 +314,11 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
       endDrawer: _buildDrawer(),
       body: Column(
         children: [
-          _buildCounter(_availableHeight),
-          _buildTextBox(
+          buildCounter(_availableHeight, _vocabIndex, _practiceVocab),
+          buildTextBox(
             _practiceVocab[_vocabIndex][_language == "Angličtina" ? 0 : 1],
             _availableHeight,
+            _textBoxDecoration,
           ),
           _buildButtonSection(
             _buttonTexts[0],

@@ -49,3 +49,39 @@ const BoxDecoration textBoxGreen = BoxDecoration(
   ),
   color: Colors.green,
 );
+
+Widget buildCounter(height, vocabIndex, practiceVocab) {
+  return Container(
+    padding: const EdgeInsets.only(
+      bottom: 10,
+    ),
+    alignment: Alignment.bottomCenter,
+    height: height * 0.1,
+    child: Text(
+      (vocabIndex + 1).toString() + "/" + (practiceVocab.length).toString(),
+      style: const TextStyle(
+        fontSize: 20,
+      ),
+    ),
+  );
+}
+
+Widget buildTextBox(text, height, valueListenable) {
+  return ValueListenableBuilder(
+    valueListenable: valueListenable,
+    builder: (context, BoxDecoration value, _) {
+      return Container(
+        height: height * 0.3,
+        width: double.infinity,
+        decoration: value,
+        alignment: Alignment.center,
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontSize: 30,
+          ),
+        ),
+      );
+    },
+  );
+}

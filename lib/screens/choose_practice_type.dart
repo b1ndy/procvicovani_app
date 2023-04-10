@@ -25,6 +25,11 @@ class ChoosePracticeType extends StatelessWidget {
             "/choose-one",
             chooseOneInfo,
           ),
+          ButtonWithIcon(
+            "Writing",
+            "/writing",
+            chooseOneInfo,
+          ),
         ],
       ),
     );
