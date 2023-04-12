@@ -3,8 +3,8 @@ import '../data/instructions.dart';
 import '../widgets/button_with_icon.dart';
 import '../widgets/my_app_bar.dart';
 
-class ChoosePracticeType extends StatelessWidget {
-  const ChoosePracticeType({Key? key}) : super(key: key);
+class ChoosePracticeTypeScreen extends StatelessWidget {
+  const ChoosePracticeTypeScreen({Key? key}) : super(key: key);
   static const routeName = "/choose-practice";
 
   @override
@@ -28,7 +28,7 @@ class ChoosePracticeType extends StatelessWidget {
           ButtonWithIcon(
             "Writing",
             "/writing",
-            chooseOneInfo,
+            "",
           ),
         ],
       ),

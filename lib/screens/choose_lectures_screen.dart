@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import './choose_practice_type.dart';
+import 'choose_practice_type_screen.dart';
 
 import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
@@ -89,7 +89,7 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
     if (_practiceVocab == true) {
       Navigator.pushNamed(
         context,
-        ChoosePracticeType.routeName,
+        ChoosePracticeTypeScreen.routeName,
       );
     } else {
       showDialog<String>(

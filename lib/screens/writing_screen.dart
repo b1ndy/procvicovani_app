@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../data/practice_toolbox.dart';
@@ -18,7 +19,7 @@ class _WritingScreenState extends State<WritingScreen> {
   int _vocabIndex = 0;
   int _correct = 0;
   int _incorrect = 0;
-  TextEditingController _vocabController = TextEditingController();
+  final TextEditingController _vocabController = TextEditingController();
   List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
   //setting default
   final ValueNotifier<BoxDecoration> _textBoxDecoration =
@@ -95,7 +96,7 @@ class _WritingScreenState extends State<WritingScreen> {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title: const Text("Návod"),
-                  content: const Text(chooseOneGuide),
+                  content: const Text(""),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -124,6 +125,88 @@ class _WritingScreenState extends State<WritingScreen> {
     );
   }
 
+  void _handleVocabSub() {
+    _isDisabled.value = true;
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (_vocabController.text ==
+        _practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]) {
+      _correct++;
+      _textBoxDecoration.value = textBoxGreen;
+    } else {
+      _incorrect++;
+      _textBoxDecoration.value = textBoxRed;
+    }
+    Timer(const Duration(milliseconds: 300), () {
+      if (_vocabIndex + 1 != _practiceVocab.length) {
+        _textBoxDecoration.value = textBoxDefault;
+        _isDisabled.value = false;
+        setState(() {
+          _vocabIndex++;
+        });
+      } else {
+        _textBoxDecoration.value = textBoxDefault;
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: const Text("Skvělá práce!"),
+            content: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: 'Měl jsi '),
+                  TextSpan(
+                    text: _correct.toString(),
+                    style: const TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                  const TextSpan(text: ' slovíčka správně a '),
+                  TextSpan(
+                    text: _incorrect.toString(),
+                    style: const TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      color: Colors.red,
+                    ),
+                  ),
+                  const TextSpan(text: ' špatně.'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _correct = 0;
+                    _incorrect = 0;
+                    _vocabIndex = 0;
+                    _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                    _isDisabled.value = false;
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text('Restart'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    _vocabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
@@ -144,65 +227,58 @@ class _WritingScreenState extends State<WritingScreen> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
         84;
-    final List _wordList = _practiceVocab
-        .map((e) => e[_language == "Angličtina" ? 1 : 0])
-        .toList();
-    List _buttonTexts = [_wordList[_vocabIndex]];
-    _wordList.removeAt(_vocabIndex);
-    for (int i = 0; i < 3; i++) {
-      if (_wordList.isEmpty) {
-        break;
-      }
-      _wordList.shuffle();
-      _buttonTexts.add(_wordList[0]);
-      _wordList.removeAt(0);
-    }
-    if (_buttonTexts.length < 4) {
-      int rep = 4 - _buttonTexts.length;
-      for (int i = 0; i < rep; i++) {
-        _buttonTexts.add("");
-      }
-    }
-    _buttonTexts.shuffle();
-
-    return Scaffold(
-      appBar: appBar,
-      endDrawer: _buildDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            buildCounter(_availableHeight, _vocabIndex, _practiceVocab),
-            buildTextBox(
-              _practiceVocab[_vocabIndex][_language == "Angličtina" ? 0 : 1],
-              _availableHeight,
-              _textBoxDecoration,
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                controller: _vocabController,
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      width: 1,
-                      color: Colors.grey.shade400,
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: appBar,
+        endDrawer: _buildDrawer(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              buildCounter(_availableHeight, _vocabIndex, _practiceVocab),
+              buildTextBox(
+                _practiceVocab[_vocabIndex][_language == "Angličtina" ? 0 : 1],
+                _availableHeight,
+                _textBoxDecoration,
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onSubmitted: (_correct + _incorrect) == _practiceVocab.length
+                      ? null
+                      : (_) => _handleVocabSub(),
+                  controller: _vocabController,
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                        color: Colors.grey.shade400,
+                      ),
                     ),
+                    hintText: 'Enter Czech Translation',
                   ),
-                  hintText: 'Enter Czech Translation',
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          Icons.chevron_right_rounded,
-        ),
+        floatingActionButton: ValueListenableBuilder(
+            valueListenable: _isDisabled,
+            builder: (context, bool value, _) {
+              return FloatingActionButton(
+                onPressed: value == true
+                    ? null
+                    : () {
+                        _handleVocabSub();
+                      },
+                child: const Icon(
+                  Icons.chevron_right_rounded,
+                ),
+              );
+            }),
       ),
     );
   }
