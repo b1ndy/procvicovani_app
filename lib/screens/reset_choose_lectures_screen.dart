@@ -163,7 +163,7 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
           //saves changes to file and rebuilds page
           lds.localDataService
               .writeToFile(json.encode(dsc.dataServiceClass.getVocabList()),
-                  "sixClassVocab")
+                  dsc.dataServiceClass.getCurrentVocab()[0])
               .then((value) => setState(() {}));
         },
         child: const Icon(

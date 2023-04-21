@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'choose_practice_type_screen.dart';
 
+import '../data/vocab_register.dart';
 import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
@@ -16,8 +17,8 @@ class ChooseLecturesScreen extends StatefulWidget {
 
 class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
   //list of units and lectures
-  final Map _lectureList = dsc.dataServiceClass.getVocabList().map(
-      (unit, lectures) => MapEntry(
+  Map _lectureList = dsc.dataServiceClass.getVocabList().map((unit, lectures) =>
+      MapEntry(
           unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
 
   //builds UnitName with bottom border
@@ -111,15 +112,25 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _chosenVocab = ModalRoute.of(context)!.settings.arguments.toString();
+    if (dsc.dataServiceClass.getVocabList() == {} || _lectureList == {}) {
+      dsc.dataServiceClass.fillVocabList(vocabRegister[_chosenVocab]![0]!);
+      _lectureList = dsc.dataServiceClass.getVocabList().map((unit, lectures) =>
+          MapEntry(
+              unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
+    }
     final _unitList = _lectureList.keys.toList();
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(
           onPressed: () {
-            lds.localDataService
-                .writeToFile(json.encode(dsc.dataServiceClass.getVocabList()),
-                    "sixClassVocab")
-                .then((value) => Navigator.of(context).pop());
+            if (dsc.dataServiceClass.getVocabList().isNotEmpty &&
+                dsc.dataServiceClass.getCurrentVocab().isNotEmpty) {
+              lds.localDataService
+                  .writeToFile(json.encode(dsc.dataServiceClass.getVocabList()),
+                      dsc.dataServiceClass.getCurrentVocab()[0])
+                  .then((value) => Navigator.of(context).pop());
+            }
           },
         ),
         title: const Text("Vyber lekci"),

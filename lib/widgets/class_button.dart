@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 
-import '../data/data_service_class.dart' as cs;
+import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
 class ClassButton extends StatelessWidget {
   final String text;
   final String route;
-  final String chosenVocab;
+  final List chosenVocab;
 
   // ignore: use_key_in_widget_constructors
   const ClassButton(
@@ -28,12 +28,14 @@ class ClassButton extends StatelessWidget {
       child: ElevatedButton(
         child: Text(text),
         onPressed: () {
-          lds.localDataService.readFromFile(chosenVocab).then((value) {
+          lds.localDataService.readFromFile(chosenVocab[0]).then((value) {
             if (value != "") {
-              cs.dataServiceClass.fillVocabList(json.decode(value));
+              dsc.dataServiceClass.fillVocabList(json.decode(value));
+              dsc.dataServiceClass.saveCurrentVocab(chosenVocab);
               Navigator.pushNamed(
                 context,
                 route,
+                arguments: chosenVocab,
               );
             } else {
               showDialog<String>(

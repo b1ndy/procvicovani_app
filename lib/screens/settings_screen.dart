@@ -6,7 +6,7 @@ import './reset_choose_class_screen.dart';
 import '../widgets/my_app_bar.dart';
 import '../widgets/default_button.dart';
 
-import '../data/six_class_vocab.dart';
+import '../data/vocab_register.dart';
 import '../data/local_data_service.dart' as lds;
 
 //reset progress for each lecture separately
@@ -44,8 +44,10 @@ class SettingsScreen extends StatelessWidget {
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
-                          lds.localDataService.writeToFile(
-                              json.encode(sixClassVocab), "sixClassVocab");
+                          vocabRegister.forEach((k, v) {
+                            lds.localDataService
+                                .writeToFile(json.encode(v), k[0]);
+                          });
                           Navigator.pop(context);
                         },
                         child: const Text('Ano'),

@@ -8,8 +8,8 @@ import '../widgets/default_button.dart';
 import '../widgets/my_app_bar.dart';
 import "../widgets/inf_button.dart";
 
-import '../data/six_class_vocab.dart';
-import '../data/data_service_class.dart' as cs;
+import '../data/vocab_register.dart';
+import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
 
 class HomepageScreen extends StatefulWidget {
@@ -25,12 +25,14 @@ class _HomepageScreenState extends State<HomepageScreen>
   void initState() {
     super.initState();
     //if file exists, nothing happens, if file doesn't exists it is created
-    lds.localDataService.localFile("sixClassVocab").then((value) {
-      if (!value.existsSync()) {
-        lds.localDataService
-            .writeToFile(json.encode(sixClassVocab), "sixClassVocab");
-      }
+    vocabRegister.forEach((k, v) {
+      lds.localDataService.localFile(k[0]).then((value) {
+        if (!value.existsSync()) {
+          lds.localDataService.writeToFile(json.encode(v), k[0]);
+        }
+      });
     });
+
     WidgetsBinding.instance?.addObserver(this);
   }
 
@@ -51,8 +53,13 @@ class _HomepageScreenState extends State<HomepageScreen>
     final isBackground = state == AppLifecycleState.paused;
 
     if (isBackground) {
-      lds.localDataService.writeToFile(
-          json.encode(cs.dataServiceClass.getVocabList()), "sixClassVocab");
+      print(dsc.dataServiceClass.getCurrentVocab());
+      if (dsc.dataServiceClass.getCurrentVocab().isNotEmpty &&
+          dsc.dataServiceClass.getVocabList().isNotEmpty) {
+        lds.localDataService.writeToFile(
+            json.encode(dsc.dataServiceClass.getVocabList()),
+            dsc.dataServiceClass.getCurrentVocab()[0]);
+      }
     }
   }
 

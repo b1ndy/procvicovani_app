@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:procvicovani_app/data/vocab_register.dart';
 
 import './choose_lectures_screen.dart';
 
@@ -16,13 +17,23 @@ class ChooseClassScreen extends StatelessWidget {
       appBar: MyAppBar("Vyber třídu"),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          ClassButton(
-            "6. třída",
-            ChooseLecturesScreen.routeName,
-            "sixClassVocab",
-          ),
-        ],
+        children: vocabRegister.keys
+            .map<Widget>((key) =>
+                ClassButton(key[1], ChooseLecturesScreen.routeName, key))
+            .toList(),
+
+        // const [
+        //   ClassButton(
+        //     "6. třída",
+        //     ChooseLecturesScreen.routeName,
+        //     "sixClassVocab",
+        //   ),
+        //   ClassButton(
+        //     "test",
+        //     ChooseLecturesScreen.routeName,
+        //     "test_vocab",
+        //   ),
+        // ],
       ),
     );
   }

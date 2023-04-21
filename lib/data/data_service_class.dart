@@ -6,6 +6,7 @@
 class DataServiceClass {
   Map _vocabList = {};
   Map _practiceVocab = {};
+  List _currentVocab = [];
 
   void fillVocabList(Map chosenClass) {
     //pokud chci změnit třídu, tak se vocablist musí uložit do souboru, aby se tu nesmazal
@@ -29,6 +30,11 @@ class DataServiceClass {
       }
     });
     return (_practiceVocab.isNotEmpty) ? true : false;
+  }
+
+  //saves curret vocab
+  void saveCurrentVocab(List currentVocab) {
+    _currentVocab = currentVocab;
   }
 
   //sets status (learned, learning..) for certain lexis in _practiceVocab
@@ -130,6 +136,11 @@ class DataServiceClass {
     });
     _practiceVocabList.shuffle();
     return _practiceVocabList;
+  }
+
+  //returns curret vocab
+  List getCurrentVocab() {
+    return _currentVocab;
   }
 }
 
