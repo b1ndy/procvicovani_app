@@ -112,9 +112,10 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _chosenVocab = ModalRoute.of(context)!.settings.arguments.toString();
+    //empty listview fix
     if (dsc.dataServiceClass.getVocabList() == {} || _lectureList == {}) {
-      dsc.dataServiceClass.fillVocabList(vocabRegister[_chosenVocab]![0]!);
+      dsc.dataServiceClass.fillVocabList(
+          vocabRegister[dsc.dataServiceClass.getCurrentVocab()]!);
       _lectureList = dsc.dataServiceClass.getVocabList().map((unit, lectures) =>
           MapEntry(
               unit, lectures.keys.map((lecture) => [lecture, false]).toList()));

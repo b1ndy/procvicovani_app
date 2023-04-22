@@ -117,6 +117,7 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
                               ],
                             ),
                           ),
+                          activeColor: Colors.red.shade500,
                         ))
                     .toList()),
           ],
@@ -169,6 +170,7 @@ class _ResetLecturesScreenState extends State<ResetChooseLecturesScreen> {
         child: const Icon(
           Icons.arrow_right_alt_sharp,
         ),
+        backgroundColor: Colors.red.shade500,
       ),
     );
   }

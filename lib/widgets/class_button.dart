@@ -35,7 +35,6 @@ class ClassButton extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 route,
-                arguments: chosenVocab,
               );
             } else {
               showDialog<String>(

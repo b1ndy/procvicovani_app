@@ -96,7 +96,7 @@ class _WritingScreenState extends State<WritingScreen> {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title: const Text("Návod"),
-                  content: const Text(""),
+                  content: const Text(writingGuide),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () => Navigator.pop(context),
@@ -128,14 +128,41 @@ class _WritingScreenState extends State<WritingScreen> {
   void _handleVocabSub() {
     _isDisabled.value = true;
     FocusManager.instance.primaryFocus?.unfocus();
-    if (_vocabController.text ==
-        _practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]) {
+    if (_vocabController.text.toLowerCase() ==
+        _practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]
+            .toLowerCase()) {
       _correct++;
       _textBoxDecoration.value = textBoxGreen;
     } else {
       _incorrect++;
       _textBoxDecoration.value = textBoxRed;
+      Timer(
+          const Duration(milliseconds: 350),
+          () => showDialog<String>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text("Chybka"),
+                  content: Text.rich(TextSpan(children: [
+                    const TextSpan(text: "Správná odpověď je: "),
+                    TextSpan(
+                      text: _practiceVocab[_vocabIndex]
+                          [_language == "Angličtina" ? 1 : 0],
+                      style: const TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ])),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ));
     }
+    _vocabController.text = "";
     Timer(const Duration(milliseconds: 300), () {
       if (_vocabIndex + 1 != _practiceVocab.length) {
         _textBoxDecoration.value = textBoxDefault;
@@ -258,7 +285,9 @@ class _WritingScreenState extends State<WritingScreen> {
                         color: Colors.grey.shade400,
                       ),
                     ),
-                    hintText: 'Enter Czech Translation',
+                    hintText: _language == "Angličtina"
+                        ? 'Napiš český překlad'
+                        : 'Napiš anglický překlad',
                   ),
                 ),
               ),

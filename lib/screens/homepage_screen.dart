@@ -8,6 +8,7 @@ import '../widgets/default_button.dart';
 import '../widgets/my_app_bar.dart';
 import "../widgets/inf_button.dart";
 
+import '../data/instructions.dart';
 import '../data/vocab_register.dart';
 import '../data/data_service_class.dart' as dsc;
 import '../data/local_data_service.dart' as lds;
@@ -53,7 +54,6 @@ class _HomepageScreenState extends State<HomepageScreen>
     final isBackground = state == AppLifecycleState.paused;
 
     if (isBackground) {
-      print(dsc.dataServiceClass.getCurrentVocab());
       if (dsc.dataServiceClass.getCurrentVocab().isNotEmpty &&
           dsc.dataServiceClass.getVocabList().isNotEmpty) {
         lds.localDataService.writeToFile(
@@ -131,10 +131,11 @@ class _HomepageScreenState extends State<HomepageScreen>
               ChooseClassScreen.routeName,
             ),
             const DefaultButton(
-              "Nastavení",
+              "Resetovat postup",
               SettingsScreen.routeName,
             ),
-            const InfButton("O aplikaci"),
+            const InfButton("Nápověda", "Nápověda k aplikaci", helpText),
+            const InfButton("O aplikaci", "O aplikaci", aboutAppText),
           ],
         ),
       ),

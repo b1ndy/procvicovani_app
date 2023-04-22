@@ -28,7 +28,7 @@ class ChoosePracticeTypeScreen extends StatelessWidget {
           ButtonWithIcon(
             "Writing",
             "/writing",
-            "",
+            writingInfo,
           ),
         ],
       ),

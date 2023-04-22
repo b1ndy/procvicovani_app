@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../data/instructions.dart';
-
 class InfButton extends StatelessWidget {
-  final String text;
+  final String buttonText;
+  final String headlineText;
+  final String alertText;
 
   // ignore: use_key_in_widget_constructors
-  const InfButton(this.text);
+  const InfButton(this.buttonText, this.headlineText, this.alertText);
 
   @override
   Widget build(BuildContext context) {
@@ -18,12 +18,12 @@ class InfButton extends StatelessWidget {
         horizontal: 20,
       ),
       child: ElevatedButton(
-        child: Text(text),
+        child: Text(buttonText),
         onPressed: () => showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('O aplikaci'),
-            content: const Text(oAplikaci),
+            title: Text(headlineText),
+            content: Text(alertText),
             actions: <Widget>[
               TextButton(
                 onPressed: () => Navigator.pop(context, 'OK'),
