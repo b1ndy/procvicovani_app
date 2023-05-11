@@ -3,5 +3,4 @@ import '../data/test_vocab.dart';
 
 final vocabRegister = {
   ["sixClassVocab", "6. třída"]: sixClassVocab,
-  ["test_vocab", "test"]: testVocab,
 };

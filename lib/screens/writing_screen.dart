@@ -76,12 +76,14 @@ class _WritingScreenState extends State<WritingScreen> {
             title: const Text("Restartovat"),
             onTap: () {
               setState(() {
+                _textBoxDecoration.value = textBoxDefault;
                 _correct = 0;
                 _incorrect = 0;
                 _vocabIndex = 0;
                 _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
                 _isDisabled.value = false;
               });
+              _vocabController.text = "";
               Navigator.pop(context);
             },
           ),
@@ -133,97 +135,183 @@ class _WritingScreenState extends State<WritingScreen> {
             .toLowerCase()) {
       _correct++;
       _textBoxDecoration.value = textBoxGreen;
-    } else {
-      _incorrect++;
-      _textBoxDecoration.value = textBoxRed;
-      Timer(
-          const Duration(milliseconds: 350),
-          () => showDialog<String>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: const Text("Chybka"),
-                  content: Text.rich(TextSpan(children: [
-                    const TextSpan(text: "Správná odpověď je: "),
+      Timer(const Duration(milliseconds: 300), () {
+        if (_vocabIndex + 1 != _practiceVocab.length) {
+          _textBoxDecoration.value = textBoxDefault;
+          _isDisabled.value = false;
+          setState(() {
+            _vocabIndex++;
+          });
+        } else {
+          _textBoxDecoration.value = textBoxDefault;
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text("Skvělá práce!"),
+              content: Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(text: 'Měl jsi '),
                     TextSpan(
-                      text: _practiceVocab[_vocabIndex]
-                          [_language == "Angličtina" ? 1 : 0],
+                      text: _correct.toString(),
                       style: const TextStyle(
                         // fontWeight: FontWeight.bold,
                         color: Colors.green,
                       ),
                     ),
-                  ])),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'),
+                    const TextSpan(text: ' slovíčka správně a '),
+                    TextSpan(
+                      text: _incorrect.toString(),
+                      style: const TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
                     ),
+                    const TextSpan(text: ' špatně.'),
                   ],
                 ),
-              ));
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _correct = 0;
+                      _incorrect = 0;
+                      _vocabIndex = 0;
+                      _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                      _isDisabled.value = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Restart'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      });
+    } else {
+      _incorrect++;
+      _textBoxDecoration.value = textBoxRed;
+      Timer(const Duration(milliseconds: 300), () {
+        if (_vocabIndex + 1 != _practiceVocab.length) {
+          showDialog<String>(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: const Text("Chybka"),
+                    content: Text.rich(TextSpan(children: [
+                      const TextSpan(text: "Správná odpověď je: "),
+                      TextSpan(
+                        text: _practiceVocab[_vocabIndex]
+                            [_language == "Angličtina" ? 1 : 0],
+                        style: const TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ])),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          _textBoxDecoration.value = textBoxDefault;
+                          _isDisabled.value = false;
+                          setState(() {
+                            _vocabIndex++;
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ));
+        } else {
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              title: const Text("Skvělá práce!"),
+              content: Text.rich(
+                TextSpan(
+                  children: [
+                    const TextSpan(text: 'Měl jsi '),
+                    TextSpan(
+                      text: _correct.toString(),
+                      style: const TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                    const TextSpan(text: ' slovíčka správně a '),
+                    TextSpan(
+                      text: _incorrect.toString(),
+                      style: const TextStyle(
+                        // fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const TextSpan(text: ' špatně.'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _textBoxDecoration.value = textBoxDefault;
+                      _correct = 0;
+                      _incorrect = 0;
+                      _vocabIndex = 0;
+                      _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                      _isDisabled.value = false;
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Restart'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+          showDialog<String>(
+              barrierDismissible: false,
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                    title: const Text("Chybka"),
+                    content: Text.rich(TextSpan(children: [
+                      const TextSpan(text: "Správná odpověď je: "),
+                      TextSpan(
+                        text: _practiceVocab[_vocabIndex]
+                            [_language == "Angličtina" ? 1 : 0],
+                        style: const TextStyle(
+                          // fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ])),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ));
+        }
+      });
     }
     _vocabController.text = "";
-    Timer(const Duration(milliseconds: 300), () {
-      if (_vocabIndex + 1 != _practiceVocab.length) {
-        _textBoxDecoration.value = textBoxDefault;
-        _isDisabled.value = false;
-        setState(() {
-          _vocabIndex++;
-        });
-      } else {
-        _textBoxDecoration.value = textBoxDefault;
-        showDialog<String>(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text("Skvělá práce!"),
-            content: Text.rich(
-              TextSpan(
-                children: [
-                  const TextSpan(text: 'Měl jsi '),
-                  TextSpan(
-                    text: _correct.toString(),
-                    style: const TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                  const TextSpan(text: ' slovíčka správně a '),
-                  TextSpan(
-                    text: _incorrect.toString(),
-                    style: const TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  const TextSpan(text: ' špatně.'),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    _correct = 0;
-                    _incorrect = 0;
-                    _vocabIndex = 0;
-                    _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
-                    _isDisabled.value = false;
-                  });
-                  Navigator.pop(context);
-                },
-                child: const Text('Restart'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    });
   }
 
   @override
