@@ -94,6 +94,15 @@ class DataServiceClass {
     });
   }
 
+  //returns vocab from certain lecture
+  List getLectureVocab(unit, lecture) {
+    List _lectureVocab = [];
+    for (var element in _vocabList[unit][lecture]) {
+      _lectureVocab.add([element[0], false]);
+    }
+    return _lectureVocab;
+  }
+
   //returns _vocabList
   Map getVocabList() {
     return _vocabList;

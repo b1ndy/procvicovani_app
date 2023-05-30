@@ -16,10 +16,13 @@ class ChooseLecturesScreen extends StatefulWidget {
 }
 
 class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
-  //list of units and lectures
+  //map of units and lectures with switch to show chosen lectures
   Map _lectureList = dsc.dataServiceClass.getVocabList().map((unit, lectures) =>
       MapEntry(
           unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
+  //list of lists for chosen vocabulary [[unit, lecture, vocab]]
+  List _vocabularyList = [];
+  bool value2 = true;
 
   //builds UnitName with bottom border
   Widget _buildUnitName(String text) {
@@ -65,6 +68,62 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
                     .map<Widget>((lecture) => CheckboxListTile(
                           value: lecture[1],
                           onChanged: (value) {
+                            //picking words dialog--------------------
+                            //při confirm choice je potřeba vzít v potaz jednotlivá slovíčka (get practicce vocab, getallpractice vocab)
+                            //možnost vybrat všechny nebo vybrat pouze některé
+                            if (lecture[1] == false) {
+                              List _lectureVocab = dsc.dataServiceClass
+                                  .getLectureVocab(
+                                      _unitList[index], lecture[0]);
+                              for (var e in _lectureVocab) {
+                                _vocabularyList
+                                    .removeWhere((e2) => e2[2] == e[0]);
+                              }
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: const Text('Vyber slovíčka'),
+                                  content: StatefulBuilder(builder:
+                                      (BuildContext context,
+                                          StateSetter setState) {
+                                    return SizedBox(
+                                      width: double.maxFinite,
+                                      child: ListView(
+                                          shrinkWrap: true,
+                                          children: _lectureVocab
+                                              .map((e) => CheckboxListTile(
+                                                  value: e[1],
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      e[1] = val!;
+                                                    });
+                                                  },
+                                                  title: Text(e[0])))
+                                              .toList()),
+                                    );
+                                  }),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        for (var e in _lectureVocab) {
+                                          if (e[1] == true) {
+                                            _vocabularyList.add([
+                                              _unitList[index],
+                                              lecture[0],
+                                              e[0]
+                                            ]);
+                                          }
+                                        }
+                                        print(_vocabularyList);
+                                        Navigator.pop(context, 'OK');
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            //end of picking words dialog-----
                             setState(() {
                               lecture[1] = value!;
                             });
