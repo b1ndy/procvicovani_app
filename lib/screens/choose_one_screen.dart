@@ -78,7 +78,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                 _correct = 0;
                 _incorrect = 0;
                 _vocabIndex = 0;
-                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
                 _isDisabled.value = false;
               });
               Navigator.pop(context);
@@ -228,7 +228,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                                       _incorrect = 0;
                                       _vocabIndex = 0;
                                       _practiceVocab = dsc.dataServiceClass
-                                          .getPracticeVocab();
+                                          .getAllPracticeVocab();
                                       _isDisabled.value = false;
                                     });
                                     Navigator.pop(context);

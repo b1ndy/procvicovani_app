@@ -55,6 +55,19 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
     );
   }
 
+  //callback function to refresh page
+  void _refresh(lectureVocab, lecture) {
+    if (lectureVocab.any((e) => e[1] == true)) {
+      setState(() {
+        lecture[1] = true;
+      });
+    } else {
+      setState(() {
+        lecture[1] = false;
+      });
+    }
+  }
+
   //builds scrollable LectureList via ListView.builder
   Widget _buildLectureList(_unitList) {
     return ListView.builder(
@@ -68,65 +81,79 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
                     .map<Widget>((lecture) => CheckboxListTile(
                           value: lecture[1],
                           onChanged: (value) {
-                            //picking words dialog--------------------
-                            //při confirm choice je potřeba vzít v potaz jednotlivá slovíčka (get practicce vocab, getallpractice vocab)
-                            //možnost vybrat všechny nebo vybrat pouze některé
-                            if (lecture[1] == false) {
-                              List _lectureVocab = dsc.dataServiceClass
-                                  .getLectureVocab(
-                                      _unitList[index], lecture[0]);
-                              for (var e in _lectureVocab) {
-                                _vocabularyList
-                                    .removeWhere((e2) => e2[2] == e[0]);
+                            List _lectureVocab = dsc.dataServiceClass
+                                .getLectureVocab(_unitList[index], lecture[0]);
+                            for (var e in _lectureVocab) {
+                              if (_vocabularyList.any((e2) => e2[2] == e[0])) {
+                                e[1] = true;
                               }
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: const Text('Vyber slovíčka'),
-                                  content: StatefulBuilder(builder:
-                                      (BuildContext context,
-                                          StateSetter setState) {
-                                    return SizedBox(
-                                      width: double.maxFinite,
-                                      child: ListView(
-                                          shrinkWrap: true,
-                                          children: _lectureVocab
-                                              .map((e) => CheckboxListTile(
-                                                  value: e[1],
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                      e[1] = val!;
-                                                    });
-                                                  },
-                                                  title: Text(e[0])))
-                                              .toList()),
-                                    );
-                                  }),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        for (var e in _lectureVocab) {
-                                          if (e[1] == true) {
-                                            _vocabularyList.add([
-                                              _unitList[index],
-                                              lecture[0],
-                                              e[0]
-                                            ]);
-                                          }
-                                        }
-                                        print(_vocabularyList);
-                                        Navigator.pop(context, 'OK');
-                                      },
-                                      child: const Text('OK'),
-                                    ),
-                                  ],
-                                ),
-                              );
                             }
-                            //end of picking words dialog-----
-                            setState(() {
-                              lecture[1] = value!;
-                            });
+                            showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    StatefulBuilder(builder:
+                                        (BuildContext context,
+                                            StateSetter setState) {
+                                      return AlertDialog(
+                                        title: const Text('Vyber slovíčka'),
+                                        content: SizedBox(
+                                          width: double.maxFinite,
+                                          child: ListView(
+                                              shrinkWrap: true,
+                                              children: _lectureVocab
+                                                  .map((e) => CheckboxListTile(
+                                                      value: e[1],
+                                                      onChanged: (val) {
+                                                        setState(() {
+                                                          e[1] = val!;
+                                                        });
+                                                      },
+                                                      title: Text(e[0])))
+                                                  .toList()),
+                                        ),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () {
+                                              if (_lectureVocab
+                                                  .any((e) => e[1] == false)) {
+                                                for (var e2 in _lectureVocab) {
+                                                  setState(() {
+                                                    e2[1] = true;
+                                                  });
+                                                }
+                                              } else {
+                                                for (var e2 in _lectureVocab) {
+                                                  setState(() {
+                                                    e2[1] = false;
+                                                  });
+                                                }
+                                              }
+                                            },
+                                            child: const Text('Vyber všechny'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              for (var e in _lectureVocab) {
+                                                _vocabularyList.removeWhere(
+                                                    (e2) => e2[2] == e[0]);
+                                                if (e[1] == true) {
+                                                  _vocabularyList.add([
+                                                    _unitList[index],
+                                                    lecture[0],
+                                                    e[0]
+                                                  ]);
+                                                }
+                                              }
+                                              //callback function to refresh page
+                                              _refresh(_lectureVocab, lecture);
+                                              print(_vocabularyList);
+                                              Navigator.pop(context, 'OK');
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    }));
                           },
                           title: Text(
                             lecture[0],
@@ -134,7 +161,7 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
                               fontSize: 19,
                             ),
                           ),
-                        ))
+                        )) //-----------------
                     .toList()),
           ],
         );
@@ -145,7 +172,8 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
 
   //fills PracticeVocab in DataServiceClass and if its not empty then navigates to next page
   void confirmChoice() {
-    final _practiceVocab = dsc.dataServiceClass.fillPracticeVocab(_lectureList);
+    bool _practiceVocab =
+        dsc.dataServiceClass.fillPracticeVocab2(_vocabularyList);
     if (_practiceVocab == true) {
       Navigator.pushNamed(
         context,

@@ -5,7 +5,8 @@
 //_practiceVocabList - [slovíčka]
 class DataServiceClass {
   Map _vocabList = {};
-  Map _practiceVocab = {};
+  List _practiceVocab = [];
+  Map _practiceVocab2 = {};
   List _currentVocab = [];
 
   void fillVocabList(Map chosenClass) {
@@ -21,14 +22,25 @@ class DataServiceClass {
   }
 
   bool fillPracticeVocab(Map lectureList) {
-    _practiceVocab = {};
+    _practiceVocab2 = {};
     lectureList.forEach((key, value) {
       for (var element in value) {
         if (element[1] == true) {
-          _practiceVocab[[key, element[0]]] = _vocabList[key]![element[0]]!;
+          _practiceVocab2[[key, element[0]]] = _vocabList[key]![element[0]]!;
         }
       }
     });
+    //print(_practiceVocab2);
+    return (_practiceVocab.isNotEmpty) ? true : false;
+  }
+
+  bool fillPracticeVocab2(List vocabularyList) {
+    _practiceVocab = [];
+    vocabularyList.forEach((e) {
+      List temp = _vocabList[e[0]][e[1]];
+      _practiceVocab.add(temp.firstWhere((e2) => e2[0] == e[2]));
+    });
+    print(_practiceVocab);
     return (_practiceVocab.isNotEmpty) ? true : false;
   }
 
@@ -39,24 +51,20 @@ class DataServiceClass {
 
   //sets status (learned, learning..) for certain lexis in _practiceVocab
   void setPracticeVocab(String lexis, String status) {
-    _practiceVocab.forEach((key, value) {
-      for (var element in value) {
-        if (element[0] == lexis) {
-          element[2] = status;
-        }
+    for (var e in _practiceVocab) {
+      if (e[0] == lexis) {
+        e[2] = status;
       }
-    });
+    }
   }
 
   int _getLearnedCount() {
     int _learned = 0;
-    _practiceVocab.forEach((key, value) {
-      for (var e in value) {
-        if (e[2] == "learned") {
-          _learned++;
-        }
+    for (var e in _practiceVocab) {
+      if (e[2] == "learned") {
+        _learned++;
       }
-    });
+    }
     return _learned;
   }
 
@@ -87,11 +95,9 @@ class DataServiceClass {
 
   //sets all PracticeVocab to unknown
   void resetPracticeVocab() {
-    _practiceVocab.forEach((key, value) {
-      for (var element in value) {
-        element[2] = "unknown";
-      }
-    });
+    for (var e in _practiceVocab) {
+      e[2] = "unknown";
+    }
   }
 
   //returns vocab from certain lecture
@@ -124,13 +130,11 @@ class DataServiceClass {
   //returns shuffled practiceVocabList
   List getPracticeVocab() {
     List _practiceVocabList = [];
-    _practiceVocab.forEach((key, value) {
-      for (var e in value) {
-        if (e[2] != "learned") {
-          _practiceVocabList.add(e);
-        }
+    for (var e in _practiceVocab) {
+      if (e[2] != "learned") {
+        _practiceVocabList.add(e);
       }
-    });
+    }
     _practiceVocabList.shuffle();
     return _practiceVocabList;
   }
@@ -138,11 +142,9 @@ class DataServiceClass {
   //returns whole shuffled practiceVocabList (with learned)
   List getAllPracticeVocab() {
     List _practiceVocabList = [];
-    _practiceVocab.forEach((key, value) {
-      for (var e in value) {
-        _practiceVocabList.add(e);
-      }
-    });
+    for (var e in _practiceVocab) {
+      _practiceVocabList.add(e);
+    }
     _practiceVocabList.shuffle();
     return _practiceVocabList;
   }

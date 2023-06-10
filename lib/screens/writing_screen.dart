@@ -80,7 +80,7 @@ class _WritingScreenState extends State<WritingScreen> {
                 _correct = 0;
                 _incorrect = 0;
                 _vocabIndex = 0;
-                _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
                 _isDisabled.value = false;
               });
               _vocabController.text = "";
@@ -178,7 +178,8 @@ class _WritingScreenState extends State<WritingScreen> {
                       _correct = 0;
                       _incorrect = 0;
                       _vocabIndex = 0;
-                      _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                      _practiceVocab =
+                          dsc.dataServiceClass.getAllPracticeVocab();
                       _isDisabled.value = false;
                     });
                     Navigator.pop(context);
@@ -267,7 +268,8 @@ class _WritingScreenState extends State<WritingScreen> {
                       _correct = 0;
                       _incorrect = 0;
                       _vocabIndex = 0;
-                      _practiceVocab = dsc.dataServiceClass.getPracticeVocab();
+                      _practiceVocab =
+                          dsc.dataServiceClass.getAllPracticeVocab();
                       _isDisabled.value = false;
                     });
                     Navigator.pop(context);
