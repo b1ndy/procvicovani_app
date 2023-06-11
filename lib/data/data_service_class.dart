@@ -36,11 +36,10 @@ class DataServiceClass {
 
   bool fillPracticeVocab2(List vocabularyList) {
     _practiceVocab = [];
-    vocabularyList.forEach((e) {
+    for (var e in vocabularyList) {
       List temp = _vocabList[e[0]][e[1]];
       _practiceVocab.add(temp.firstWhere((e2) => e2[0] == e[2]));
-    });
-    print(_practiceVocab);
+    }
     return (_practiceVocab.isNotEmpty) ? true : false;
   }
 

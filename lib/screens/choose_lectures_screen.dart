@@ -21,7 +21,7 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
       MapEntry(
           unit, lectures.keys.map((lecture) => [lecture, false]).toList()));
   //list of lists for chosen vocabulary [[unit, lecture, vocab]]
-  List _vocabularyList = [];
+  final List _vocabularyList = [];
   bool value2 = true;
 
   //builds UnitName with bottom border
@@ -146,7 +146,6 @@ class _ChooseLecturesScreenState extends State<ChooseLecturesScreen> {
                                               }
                                               //callback function to refresh page
                                               _refresh(_lectureVocab, lecture);
-                                              print(_vocabularyList);
                                               Navigator.pop(context, 'OK');
                                             },
                                             child: const Text('OK'),

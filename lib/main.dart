@@ -41,10 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: Colors.grey.shade700,
+            backgroundColor: Colors.grey.shade700,
           ),
         ),
-        toggleableActiveColor: Colors.blue,
       ),
       initialRoute: "/",
       routes: {

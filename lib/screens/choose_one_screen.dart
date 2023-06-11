@@ -160,7 +160,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Colors.transparent,
+                backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),

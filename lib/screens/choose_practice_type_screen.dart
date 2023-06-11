@@ -12,9 +12,9 @@ class ChoosePracticeTypeScreen extends StatelessWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: MyAppBar("Vyber procvičování"),
-      body: Column(
+      body: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           ButtonWithIcon(
             "Flash cards",
             "/flash-cards",

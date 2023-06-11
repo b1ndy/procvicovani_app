@@ -34,12 +34,12 @@ class _HomepageScreenState extends State<HomepageScreen>
       });
     });
 
-    WidgetsBinding.instance?.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -82,8 +82,8 @@ class _HomepageScreenState extends State<HomepageScreen>
                   color: Colors.white.withOpacity(0.8),
                   colorBlendMode: BlendMode.modulate,
                 ),
-                Column(
-                  children: const [
+                const Column(
+                  children: [
                     Text(
                       "Procvičování slovní zásoby",
                       textAlign: TextAlign.center,
