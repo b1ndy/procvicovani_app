@@ -80,6 +80,7 @@ Widget buildTextBox(text, height, valueListenable) {
           style: const TextStyle(
             fontSize: 30,
           ),
+          textAlign: TextAlign.center,
         ),
       );
     },

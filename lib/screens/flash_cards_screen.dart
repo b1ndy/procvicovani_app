@@ -173,7 +173,11 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
           ),
         ],
       ),
-      child: Text(text),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 25),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

@@ -130,9 +130,10 @@ class _WritingScreenState extends State<WritingScreen> {
   void _handleVocabSub() {
     _isDisabled.value = true;
     FocusManager.instance.primaryFocus?.unfocus();
-    if (_vocabController.text.toLowerCase() ==
+    if (_vocabController.text.toLowerCase().trim() ==
         _practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]
-            .toLowerCase()) {
+            .toLowerCase()
+            .trim()) {
       _correct++;
       _textBoxDecoration.value = textBoxGreen;
       Timer(const Duration(milliseconds: 300), () {

@@ -11,16 +11,16 @@ import '../data/local_data_service.dart' as lds;
 
 //reset progress for each lecture separately
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
-  static const routeName = "/settings";
+class ResetFC extends StatelessWidget {
+  const ResetFC({Key? key}) : super(key: key);
+  static const routeName = "/reset-fc";
 
   @override
   Widget build(BuildContext context) {
     //test list
 
     return Scaffold(
-      appBar: MyAppBar("Nastavení"),
+      appBar: MyAppBar("Reset flash cards"),
       //body - test
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,

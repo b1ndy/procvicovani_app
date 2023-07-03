@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import './choose_class_screen.dart';
-import './settings_screen.dart';
+import 'reset_fc.dart';
 
 import '../widgets/default_button.dart';
 import '../widgets/my_app_bar.dart';
@@ -132,7 +132,7 @@ class _HomepageScreenState extends State<HomepageScreen>
             ),
             const DefaultButton(
               "Resetovat postup",
-              SettingsScreen.routeName,
+              ResetFC.routeName,
             ),
             const InfButton("Nápověda", "Nápověda k aplikaci", helpText),
             const InfButton("O aplikaci", "O aplikaci", aboutAppText),

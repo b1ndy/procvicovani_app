@@ -6,7 +6,7 @@ import 'screens/flash_cards_screen.dart';
 import 'screens/choose_practice_type_screen.dart';
 import 'screens/homepage_screen.dart';
 import 'screens/choose_lectures_screen.dart';
-import 'screens/settings_screen.dart';
+import 'screens/reset_fc.dart';
 import 'screens/reset_choose_lectures_screen.dart';
 import 'screens/reset_choose_class_screen.dart';
 import "screens/choose_one_screen.dart";
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (ctx) => const HomepageScreen(),
-        SettingsScreen.routeName: (ctx) => const SettingsScreen(),
+        ResetFC.routeName: (ctx) => const ResetFC(),
         ChooseLecturesScreen.routeName: (ctx) => const ChooseLecturesScreen(),
         ChoosePracticeTypeScreen.routeName: (ctx) =>
             const ChoosePracticeTypeScreen(),
