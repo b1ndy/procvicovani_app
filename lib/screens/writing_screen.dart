@@ -21,6 +21,7 @@ class _WritingScreenState extends State<WritingScreen> {
   int _incorrect = 0;
   final TextEditingController _vocabController = TextEditingController();
   List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
+  List _failedVocab = [];
   //setting default
   final ValueNotifier<BoxDecoration> _textBoxDecoration =
       ValueNotifier(textBoxDefault);
@@ -81,6 +82,7 @@ class _WritingScreenState extends State<WritingScreen> {
                 _incorrect = 0;
                 _vocabIndex = 0;
                 _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
+                _failedVocab = [];
                 _isDisabled.value = false;
               });
               _vocabController.text = "";
@@ -181,18 +183,28 @@ class _WritingScreenState extends State<WritingScreen> {
                       _vocabIndex = 0;
                       _practiceVocab =
                           dsc.dataServiceClass.getAllPracticeVocab();
+                      _failedVocab = [];
                       _isDisabled.value = false;
                     });
                     Navigator.pop(context);
                   },
                   child: const Text('Restart'),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
+                if (_failedVocab.isNotEmpty)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _correct = 0;
+                        _incorrect = 0;
+                        _vocabIndex = 0;
+                        _practiceVocab = _failedVocab;
+                        _failedVocab = [];
+                        _isDisabled.value = false;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Pokračovat'),
+                  ),
               ],
             ),
           );
@@ -200,6 +212,7 @@ class _WritingScreenState extends State<WritingScreen> {
       });
     } else {
       _incorrect++;
+      _failedVocab.add(_practiceVocab[_vocabIndex]);
       _textBoxDecoration.value = textBoxRed;
       Timer(const Duration(milliseconds: 300), () {
         if (_vocabIndex + 1 != _practiceVocab.length) {
@@ -271,18 +284,28 @@ class _WritingScreenState extends State<WritingScreen> {
                       _vocabIndex = 0;
                       _practiceVocab =
                           dsc.dataServiceClass.getAllPracticeVocab();
+                      _failedVocab = [];
                       _isDisabled.value = false;
                     });
                     Navigator.pop(context);
                   },
                   child: const Text('Restart'),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
+                if (_failedVocab.isNotEmpty)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _correct = 0;
+                        _incorrect = 0;
+                        _vocabIndex = 0;
+                        _practiceVocab = _failedVocab;
+                        _failedVocab = [];
+                        _isDisabled.value = false;
+                      });
+                      Navigator.pop(context);
+                    },
+                    child: const Text('Pokračovat'),
+                  ),
               ],
             ),
           );

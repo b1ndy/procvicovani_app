@@ -20,6 +20,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
   int _correct = 0;
   int _incorrect = 0;
   List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
+  List _failedVocab = [];
   //setting default
   final ValueNotifier<BoxDecoration> _textBoxDecoration =
       ValueNotifier(textBoxDefault);
@@ -79,6 +80,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                 _incorrect = 0;
                 _vocabIndex = 0;
                 _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
+                _failedVocab = [];
                 _isDisabled.value = false;
               });
               Navigator.pop(context);
@@ -182,6 +184,7 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                       } else {
                         _incorrect++;
                         _textBoxDecoration.value = textBoxRed;
+                        _failedVocab.add(_practiceVocab[_vocabIndex]);
                       }
                       Timer(const Duration(milliseconds: 300), () {
                         if (_vocabIndex + 1 != _practiceVocab.length) {
@@ -229,18 +232,28 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
                                       _vocabIndex = 0;
                                       _practiceVocab = dsc.dataServiceClass
                                           .getAllPracticeVocab();
+                                      _failedVocab = [];
                                       _isDisabled.value = false;
                                     });
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Restart'),
                                 ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('OK'),
-                                ),
+                                if (_failedVocab.isNotEmpty)
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _correct = 0;
+                                        _incorrect = 0;
+                                        _vocabIndex = 0;
+                                        _practiceVocab = _failedVocab;
+                                        _failedVocab = [];
+                                        _isDisabled.value = false;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text('Pokračovat'),
+                                  ),
                               ],
                             ),
                           );
