@@ -659,7 +659,7 @@ final sixClassVocab = {
       ["stick (as for sport)", "hůl"],
     ],
     "4 Learn through English": [
-      ["bar chart", " sloupcový graf"],
+      ["bar chart", "sloupcový graf"],
       ["data", "data"],
       ["investigate", "vyšetřovat, zkoumat"],
       ["line chart", "čárový diagram"],

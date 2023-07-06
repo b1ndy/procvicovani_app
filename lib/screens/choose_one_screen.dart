@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../data/practice_toolbox.dart';
@@ -14,11 +15,20 @@ class ChooseOneScreen extends StatefulWidget {
 }
 
 class _ChooseOneScreenState extends State<ChooseOneScreen> {
+  var rng = Random();
   String _language = "Angličtina";
   bool _isSwitched = false;
   int _vocabIndex = 0;
   int _correct = 0;
   int _incorrect = 0;
+  //[jednotky[lekce[slovíčka]]]
+  final List _vocabList = dsc.dataServiceClass.getVocabList().values.map((e) {
+    return e.values.map((e2) {
+      return e2.map((e3) {
+        return e3;
+      }).toList();
+    }).toList();
+  }).toList();
   List _practiceVocab = dsc.dataServiceClass.getAllPracticeVocab();
   List _failedVocab = [];
   //setting default
@@ -281,6 +291,66 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
     );
   }
 
+  void _findButtonTexts(List _buttonTexts) {
+    //creates list of shuffeled numbers of units - to avoid repetition
+    List _unitCounter = [];
+    for (var i = 0; i < _vocabList.length; i++) {
+      _unitCounter.add(i);
+    }
+    _unitCounter.shuffle();
+    //if total number of words in current phrase is 3 and more, then any phrase with more than two words is accepted
+    if (_practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]
+            .split(" ")
+            .length >
+        2) {
+      for (var i = 0; i < 3; i++) {
+        //goes through all units, picks random lecture
+        unitLoop:
+        for (var _unit in _unitCounter) {
+          int _lecture = rng.nextInt(_vocabList[_unit].length);
+          for (var _vocab in _vocabList[_unit][_lecture]) {
+            if ((_vocab[_language == "Angličtina" ? 1 : 0].split(" ").length >
+                    2) &&
+                !_buttonTexts
+                    .contains(_vocab[_language == "Angličtina" ? 1 : 0])) {
+              _buttonTexts.add(_vocab[_language == "Angličtina" ? 1 : 0]);
+              break unitLoop;
+            }
+          }
+        }
+      }
+    } else {
+      //if total number of words is less than 3, then only phrase with precisely same number of words is accepted
+      for (var i = 0; i < 3; i++) {
+        unitLoop:
+        for (var _unit in _unitCounter) {
+          int _lecture = rng.nextInt(_vocabList[_unit].length);
+          for (var _vocab in _vocabList[_unit][_lecture]) {
+            if ((_practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]
+                        .split(" ")
+                        .length ==
+                    _vocab[_language == "Angličtina" ? 1 : 0]
+                        .split(" ")
+                        .length) &&
+                !_buttonTexts
+                    .contains(_vocab[_language == "Angličtina" ? 1 : 0])) {
+              _buttonTexts.add(_vocab[_language == "Angličtina" ? 1 : 0]);
+              break unitLoop;
+            }
+          }
+        }
+      }
+    }
+    //adds empty strings to total of 4
+    if (_buttonTexts.length < 4) {
+      int rep = 4 - _buttonTexts.length;
+      for (int i = 0; i < rep; i++) {
+        _buttonTexts.add("");
+      }
+    }
+    _buttonTexts.shuffle();
+  }
+
   @override
   Widget build(BuildContext context) {
     final appBar = AppBar(
@@ -301,26 +371,12 @@ class _ChooseOneScreenState extends State<ChooseOneScreen> {
         appBar.preferredSize.height -
         MediaQuery.of(context).padding.top -
         84;
-    final List _wordList = _practiceVocab
-        .map((e) => e[_language == "Angličtina" ? 1 : 0])
-        .toList();
-    List _buttonTexts = [_wordList[_vocabIndex]];
-    _wordList.removeAt(_vocabIndex);
-    for (int i = 0; i < 3; i++) {
-      if (_wordList.isEmpty) {
-        break;
-      }
-      _wordList.shuffle();
-      _buttonTexts.add(_wordList[0]);
-      _wordList.removeAt(0);
-    }
-    if (_buttonTexts.length < 4) {
-      int rep = 4 - _buttonTexts.length;
-      for (int i = 0; i < rep; i++) {
-        _buttonTexts.add("");
-      }
-    }
-    _buttonTexts.shuffle();
+
+    //list of phrases for buttons - with the correct one in
+    List _buttonTexts = [
+      _practiceVocab[_vocabIndex][_language == "Angličtina" ? 1 : 0]
+    ];
+    _findButtonTexts(_buttonTexts);
 
     return Scaffold(
       appBar: appBar,
